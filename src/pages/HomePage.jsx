@@ -6,7 +6,7 @@ const HomePage = () => {
 
   return (
     <div className="flex flex-col items-center text-center ">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">💘 Couple Palace 💘</h1>
+      <h1 className="text-3xl font-bold text-black-800 mb-4">💘 Couple Palace 💘</h1>
       <p className="text-lg text-gray-600 mb-6">
         당신의 연애 가치관을 테스트하고 나만의 닉네임을 만들어보세요!
       </p>
