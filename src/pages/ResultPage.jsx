@@ -18,11 +18,11 @@ const ResultPage = () => {
   if (!result) return <div className="text-center">결과 생성 중...</div>;
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center">
-      <h1 className="text-3xl font-bold">{result.nickname}</h1>
-      <p>{result.relationshipStyle}</p>
-      <p>{result.marriageConditions}</p>
-      <p>{result.mbti}</p>
+    <div className="w-full flex flex-col items-center text-center">
+      <h1 className="text-3xl font-bold mb-4">{result.nickname}</h1>
+      <p className="text-lg text-gray-600">{result.relationshipStyle}</p>
+      <p className="text-lg text-gray-600">{result.marriageConditions}</p>
+      <p className="text-lg text-gray-600">{result.mbti}</p>
     </div>
   );
 };

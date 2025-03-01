@@ -25,7 +25,7 @@ const QuizPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center px-6">
+    <div className="w-full flex flex-col items-center text-center">
       <ProgressBar progress={currentQuestion + 1} total={questions.length} />
       <QuizQuestion
         question={questions[currentQuestion].question}
