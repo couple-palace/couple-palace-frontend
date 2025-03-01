@@ -7,8 +7,8 @@ const UserInputPage = () => {
   const handleSubmit = () => navigate("/result");
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center px-6">
-      <h1 className="text-2xl font-bold mb-6">프로필 입력</h1>
+    <div className="w-full flex flex-col items-center text-center">
+      <h1 className="text-2xl font-bold mb-4">프로필 입력</h1>
       <UserForm onSubmit={handleSubmit} />
     </div>
   );

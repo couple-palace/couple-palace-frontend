@@ -5,13 +5,13 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-blue-100 px-6">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">💘 Couple Palace 💘</h1>
-      <p className="text-lg text-gray-600 text-center mb-8">
+    <div className="flex flex-col items-center text-center ">
+      <h1 className="text-3xl font-bold text-black-800 mb-4">💘 Couple Palace 💘</h1>
+      <p className="text-lg text-gray-600 mb-6">
         당신의 연애 가치관을 테스트하고 나만의 닉네임을 만들어보세요!
       </p>
       <button
-        className="py-3 px-6 bg-blue-500 text-white rounded-lg shadow-lg hover:bg-blue-600 transition"
+        className="w-full py-3 bg-blue-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-blue-600 transition"
         onClick={() => navigate("/quiz")}
       >
         퀴즈 시작하기 🚀
