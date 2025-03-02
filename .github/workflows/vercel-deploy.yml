@@ -17,8 +17,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 22
+
       - name: Install Vercel CLI
         run: npm install -g vercel
 
       - name: Deploy to Vercel
-        run: vercel --token ${{ secrets.VERCEL_TOKEN }} --prod
+        run: vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --yes
