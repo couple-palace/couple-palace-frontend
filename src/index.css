@@ -59,6 +59,30 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+@keyframes stripeAnimation {
+  0% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.bg-stripe {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.4) 0px,
+    rgba(255, 255, 255, 0.4) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+  background-size: 200% 100%;
+}
+
+.animate-stripe {
+  animation: stripeAnimation 2s linear infinite;
+}
+
 
 @media (prefers-color-scheme: light) {
   :root {
