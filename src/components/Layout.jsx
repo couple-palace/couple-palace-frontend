@@ -10,8 +10,8 @@ const Layout = ({ children }) => {
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "white",
-      boxShadow: "0px 4px 10px rgba(255, 255, 255, 0.1)",
+      backgroundColor: "#2A2E3D", // ✅ 배경색 적용
+      color: "#F8E9CA", // ✅ 글씨 색 적용
       padding: "20px",
       borderRadius: "10px"
     }}>
