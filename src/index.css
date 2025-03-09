@@ -2,15 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
+  color-scheme: light;
   color: #F8E9CA;
-  background-color: #242424;
+  background-color: #2A2E3D;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -20,25 +19,29 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: #F8E9CA;
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: #F3D9A8;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  color: black;
+  background-color: #2A2E3D;
+  color: #F8E9CA;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  color: #F8E9CA;
 }
 
 button {
@@ -48,27 +51,31 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #F8E9CA;
+  color: #2A2E3D;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: border-color 0.25s, transform 0.2s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: #F3D9A8;
+  transform: scale(1.05);
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: none;
+  box-shadow: 0 0 5px rgba(248, 233, 202, 0.8);
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    color: #F8E9CA;
+    background-color: #2A2E3D;
   }
   a:hover {
-    color: #747bff;
+    color: #F3D9A8;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: #F8E9CA;
+    color: #2A2E3D;
   }
 }

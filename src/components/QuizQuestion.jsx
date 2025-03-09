@@ -2,14 +2,14 @@ import React from "react";
 
 const QuizQuestion = ({ question, options, onSelect }) => {
   return (
-    <div className="w-full flex flex-col items-center">
-      <h2 className="text-xl font-semibold mb-4">{question}</h2>
-      <div className="w-full flex flex-col gap-3">
+    <div className="w-full max-w-[400px] text-center p-6">
+      <h2 className="text-2xl font-semibold mb-6">{question}</h2>
+      <div className="space-y-4">
         {options.map((option, index) => (
           <button
             key={index}
-            className="w-full py-3 px-4 bg-gray-100 rounded-lg hover:bg-blue-500 hover:text-white transition"
             onClick={() => onSelect(option)}
+            className="w-full p-4 bg-[#F8E9CA]/10 rounded-lg text-left hover:bg-[#F8E9CA]/20 transition-colors duration-200"
           >
             {option}
           </button>

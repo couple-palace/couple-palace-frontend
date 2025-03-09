@@ -1,22 +1,21 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Layout from "../components/Layout";
 
 const HomePage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center text-center ">
-      <h1 className="text-3xl font-bold text-black-800 mb-4">💘 Couple Palace 💘</h1>
-      <p className="text-lg text-gray-600 mb-6">
-        당신의 연애 가치관을 테스트하고 나만의 닉네임을 만들어보세요!
-      </p>
+    <Layout>
+      <h1 className="text-3xl font-bold mb-4">연애 가치관 테스트</h1>
+      <p className="text-lg mb-6 text-center">연애 가치관을 분석하고 나만의 닉네임을 찾아보세요!</p>
       <button
-        className="w-full py-3 bg-blue-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-blue-600 transition"
-        onClick={() => navigate("/quiz")}
+        onClick={() => navigate("/user-input")}
+        className="bg-[#F8E9CA] text-[#2A2E3D] px-8 py-4 w-full max-w-sm rounded-lg text-lg font-semibold transform hover:scale-105 transition-transform duration-200"
       >
-        퀴즈 시작하기 🚀
+        퀴즈 시작하기
       </button>
-    </div>
+    </Layout>
   );
 };
 
