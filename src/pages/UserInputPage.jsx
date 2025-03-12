@@ -6,10 +6,14 @@ const UserInputPage = () => {
   const [job, setJob] = useState("");
   const [photo, setPhoto] = useState(null);
   const setUserData = useQuizStore((state) => state.setUserData);
+  const setPhotoData = useQuizStore((state) => state.setPhotoData);
   const navigate = useNavigate();
 
   const handleSubmit = () => {
-    setUserData({ job, photo });
+    // 직업은 userData에 저장
+    setUserData({ job });
+    // 사진은 별도의 photoData에 저장 (서버 전송용)
+    setPhotoData(photo);
     navigate("/result");
   };
 

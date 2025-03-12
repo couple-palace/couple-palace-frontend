@@ -13,8 +13,8 @@ const QuizPage = () => {
 
   const handleSelect = (optionIndex) => {
     const selectedQuestion = quizData[currentQuestion];
-    // quizData 객체에는 id 대신 question_idx를 사용
-    setAnswer(selectedQuestion.question_idx, optionIndex);
+    // question_idx, 선택한 답의 인덱스, type 값을 함께 zustand 스토어에 저장
+    setAnswer(selectedQuestion.question_idx, optionIndex, selectedQuestion.type);
 
     if (currentQuestion + 1 < quizData.length) {
       setCurrentQuestion(currentQuestion + 1);
@@ -26,7 +26,7 @@ const QuizPage = () => {
   return (
     <div className="w-full flex flex-col items-center px-4 py-6 text-center">
       {/* 프로그레스 바 */}
-      <ProgressBar progress={currentQuestion + 1} total={quizData.length} />
+      {/* <ProgressBar progress={currentQuestion + 1} total={quizData.length} /> */}
 
       {/* AnimatePresence로 질문 전환 애니메이션 적용 */}
       <div className="relative w-full max-w-[400px] mt-6">

@@ -10,7 +10,7 @@ const NameInputPage = ({ onNext }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name.trim()) {
-      setStoreName(name); // Zustand에 이름 저장
+      setStoreName(name); // Zustand에 이름 저장 (userData.name)
       onNext();
     }
   };
