@@ -1,13 +1,14 @@
 import { create } from "zustand";
 
 const useQuizStore = create((set) => ({
-  answers: [],
-  userData: { name: "", job: "", photo: "" },
-  setAnswer: (question, answer) =>
+  questionsList: [],
+  setAnswer: (question_idx, answer_idx, type) =>
     set((state) => ({
-      answers: [...state.answers, { question, answer }],
+      questionsList: [
+        ...state.questionsList,
+        { question_idx, answer_idx, type },
+      ],
     })),
-  setUserData: (data) => set({ userData: data }),
 }));
 
 export default useQuizStore;
