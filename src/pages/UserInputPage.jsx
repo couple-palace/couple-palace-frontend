@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useUserStore from "../store/userStore";
 import usePhotoStore from "../store/photoStore";
+import photoBackground from "../api/photoBackground";
+
 const UserInputPage = () => {
   const [job, setJob] = useState("");
   const [photo, setPhoto] = useState(null);
@@ -9,11 +11,19 @@ const UserInputPage = () => {
   const setPhotoData = usePhotoStore((state) => state.setPhotoData);
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
-    // 직업은 userData에 저장
+  const handleSubmit = async () => {
+    // 직업은 userData에 저장 (서버에 보내지 않음)
     setUserData({ job });
-    // 사진은 별도의 photoData에 저장 (서버 전송용)
-    setPhotoData(photo);
+
+    // 사진은 서버에 업로드하고, 응답 데이터를 photoStore에 저장
+    if (photo) {
+      try {
+        const response = await photoBackground.uploadPhoto(photo);
+        setPhotoData(response.data);
+      } catch (error) {
+        console.error("사진 업로드 실패:", error);
+      }
+    }
     navigate("/result");
   };
 

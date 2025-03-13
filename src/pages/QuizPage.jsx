@@ -25,8 +25,7 @@ const QuizPage = () => {
 
   return (
     <div className="w-full flex flex-col items-center px-4 py-6 text-center">
-      {/* 프로그레스 바에서 count 가 정상적으로 작동되지 않고, 화면에 안 보이는 오류 있음 */}
-      {/* <ProgressBar progress={currentQuestion + 1} total={quizData.length} /> */}
+      <ProgressBar progress={currentQuestion + 1} total={quizData.length} />
 
       {/* AnimatePresence로 질문 전환 애니메이션 적용 */}
       <div className="relative w-full max-w-[400px] mt-6">
