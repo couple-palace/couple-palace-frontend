@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useQuizStore from "../store/quizStore";
+import useUserStore from "../store/userStore";
+import usePhotoStore from "../store/photoStore";
 
 const ResultPage = () => {
   const [result, setResult] = useState(null);

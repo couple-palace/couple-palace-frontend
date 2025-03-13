@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useQuizStore from "../store/quizStore";
-
+import useUserStore from "../store/userStore";
+import usePhotoStore from "../store/photoStore";
 const UserInputPage = () => {
   const [job, setJob] = useState("");
   const [photo, setPhoto] = useState(null);
-  const setUserData = useQuizStore((state) => state.setUserData);
-  const setPhotoData = useQuizStore((state) => state.setPhotoData);
+  const setUserData = useUserStore((state) => state.setUserData);
+  const setPhotoData = usePhotoStore((state) => state.setPhotoData);
   const navigate = useNavigate();
 
   const handleSubmit = () => {

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import useQuizStore from "../store/quizStore";
+import useUserStore from "../store/userStore";
 import { useNavigate } from "react-router-dom";
 
 const NameInputPage = ({ onNext }) => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
-  const setStoreName = useQuizStore((state) => state.setName);
+  const setStoreName = useUserStore((state) => state.setName);
 
   const handleSubmit = (e) => {
     e.preventDefault();
