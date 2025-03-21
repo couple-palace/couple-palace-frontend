@@ -1,7 +1,8 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
+import profileGenerate from "../api/profileGenerate";
+import usePhotoStore from "../store/photoStore";
 import useQuizStore from "../store/quizStore";
 import useUserStore from "../store/userStore";
-import usePhotoStore from "../store/photoStore";
 
 const ResultPage = () => {
   const questionsList = useQuizStore((state) => state.questionsList);
@@ -13,6 +14,25 @@ const ResultPage = () => {
     return photoData ? URL.createObjectURL(photoData) : null;
   }, [photoData]);
 
+  useEffect(  () => {
+    const generateProfile = async () => {
+
+    if (questionsList.length >= 1) {
+      try {
+        const response = await profileGenerate(
+          questionsList,
+        );
+        console.log("결과 생성 성공:", response);
+      }
+      catch (error) {
+        console.error("결과 생성 실패:", error);
+      }
+    }
+  }
+  generateProfile();
+}
+  , []);
+  
   return (
     <div className="w-full flex flex-col items-center text-center">
       {/* 사용자 정보 표시 */}
