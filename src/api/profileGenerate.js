@@ -1,10 +1,16 @@
 import axios from "axios";
 
-const generateProfile = (quizData) => {
-    const profileData = {
-        quizResult : quizData,
-    };
-  return axios.post(`https://server.couplegungjeon.store/api/v1/profile/generate`, profileData);
+const generateProfile = (quizData, job) => {
+  const profileData = {
+    job,
+    questionsList: quizData,
+  };
+  
+  return axios.post(`/api/v1/profile/generate`, profileData, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
 };
 
 export default generateProfile;
