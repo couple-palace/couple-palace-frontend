@@ -5,11 +5,11 @@ const generateProfile = (quizData, job) => {
     job,
     questionsList: quizData,
   };
-  
-  return axios.post(`/api/v1/profile/generate`, profileData, {
+
+  return axios.post(`/api/v1/profile/generate/pf`, profileData, {
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   });
 };
 
