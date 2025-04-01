@@ -13,7 +13,8 @@ const Layout = ({ children }) => {
       backgroundColor: "#2A2E3D",
       color: "#F8E9CA",
       padding: "20px",
-      borderRadius: "10px"
+      borderRadius: "10px",
+      fontFamily: "'MaruBuriSemiBold', system-ui, sans-serif"
     }}>
       {children}
     </div>
