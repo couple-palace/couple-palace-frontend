@@ -11,7 +11,7 @@ const UserInputPage = () => {
   const [photoPreview, setPhotoPreview] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isShaking, setIsShaking] = useState(false); // Add state for shake animation
+  const [isShaking, setIsShaking] = useState(false);
   const setUserData = useUserStore((state) => state.setUserData);
   const setPhotoData = usePhotoStore((state) => state.setPhotoData);
   const navigate = useNavigate();
@@ -47,14 +47,8 @@ const UserInputPage = () => {
   const handleSubmit = async () => {
     if (!job.trim()) {
       setError("직업을 입력해주세요");
-      // 입력 필드 흔들림 애니메이션 적용
       setIsShaking(true);
-      
-      // 애니메이션 후 상태 초기화
-      setTimeout(() => {
-        setIsShaking(false);
-      }, 600);
-      
+      setTimeout(() => setIsShaking(false), 600);
       return;
     }
     
@@ -71,7 +65,7 @@ const UserInputPage = () => {
         navigate("/result");
       } catch (error) {
         console.error("사진 업로드 실패:", error);
-        setError("사진 업로드 중 오류가 발생했습니다");
+        setError(`사진 업로드 중 오류: ${error.message}`);
         setIsLoading(false);
       }
     } else {

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import profileGenerate from "../api/profileGenerate";
 import usePhotoStore from "../store/photoStore";
@@ -14,20 +14,16 @@ const ResultPage = () => {
   const [profileResult, setProfileResult] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const apiCallMade = useRef(false);
-
-  // photoData가 Blob 객체라면, object URL을 생성 (메모이제이션 적용)
-  const photoURL = useMemo(() => {
-    return photoData ? URL.createObjectURL(photoData) : null;
-  }, [photoData]);
-
+  const [photoURL, setPhotoURL] = useState(null);
+  
+  // 컴포넌트 마운트 시 데이터 불러오기
   useEffect(() => {
+    // 프로필 데이터 생성
     const generateProfileData = async () => {
-      if (questionsList.length >= 1 && !apiCallMade.current) {
-        apiCallMade.current = true;
+      if (questionsList.length >= 1) {
         try {
           setIsLoading(true);
-          const response = await profileGenerate(questionsList, userData.job);
+          const response = await profileGenerate(questionsList, userData?.job);
           console.log("결과 생성 성공:", response.data);
           setProfileResult(response.data);
         } catch (error) {
@@ -36,10 +32,44 @@ const ResultPage = () => {
         } finally {
           setIsLoading(false);
         }
+      } else {
+        setError("질문 데이터가 없습니다. 처음부터 다시 시작해주세요.");
+        setIsLoading(false);
       }
     };
+    
     generateProfileData();
-  }, []);
+  }, [questionsList, userData]);
+
+  // 사진 데이터 처리는 별도의 useEffect로 분리
+  useEffect(() => {
+    // 디버깅을 위한 로그 추가
+    console.log("photoData 타입:", photoData ? typeof photoData : "없음");
+    console.log("photoData 인스턴스:", photoData ? photoData instanceof Blob : "없음");
+    
+    if (photoData) {
+      try {
+        // Blob 객체인 경우만 URL 생성
+        if (photoData instanceof Blob) {
+          const url = URL.createObjectURL(photoData);
+          console.log("생성된 URL:", url);
+          setPhotoURL(url);
+          
+          // 클린업 함수
+          return () => {
+            console.log("URL 해제:", url);
+            URL.revokeObjectURL(url);
+          };
+        } else {
+          console.error("photoData가 Blob 형식이 아님:", photoData);
+          setError("이미지 데이터 형식이 올바르지 않습니다");
+        }
+      } catch (err) {
+        console.error("URL 생성 오류:", err);
+        setError("이미지 표시 중 오류가 발생했습니다");
+      }
+    }
+  }, [photoData]);
 
   return (
     <motion.div 
@@ -125,7 +155,7 @@ const ResultPage = () => {
                 </p>
               </div>
               
-              {/* 업로드된 사진 표시 */}
+              {/* 업로드된 사진 표시 - 수정된 부분 */}
               {photoURL && (
                 <motion.div 
                   className="mt-4"
@@ -139,6 +169,10 @@ const ResultPage = () => {
                       src={photoURL}
                       alt="프로필"
                       className="w-full h-auto rounded-lg"
+                      onError={(e) => {
+                        console.error("이미지 로드 실패");
+                        e.target.style.display = 'none';
+                      }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#1C2333]/70"></div>
                   </div>
