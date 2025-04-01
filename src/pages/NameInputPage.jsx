@@ -17,7 +17,6 @@ const NameInputPage = ({ onNext }) => {
     
     if (!name.trim()) {
       // 이름이 비어있을 때 흔들림 애니메이션 적용
-      setErrorMsg("이름을 입력해주세요!");
       setIsShaking(true);
       
       // 애니메이션 후 상태 초기화
@@ -29,7 +28,6 @@ const NameInputPage = ({ onNext }) => {
     }
     
     // 유효한 입력이 있는 경우
-    setErrorMsg("");
     setIsAnimating(true);
     setStoreName(name); // Zustand에 이름 저장
     
@@ -96,7 +94,7 @@ const NameInputPage = ({ onNext }) => {
                     setErrorMsg("");
                   }
                 }}
-                className={`w-full p-5 text-lg bg-[#1C2333]/70 border border-[#F8E9CA]/40 focus:border-[#F8E9CA] outline-none rounded-xl transition-all duration-300 focus:bg-[#1F2A3D] focus:shadow-lg placeholder-gray-400 ${isShaking ? 'shake' : ''}`}
+                className={`custom-input ${isShaking ? 'shake' : ''}`}
                 whileFocus={{ scale: 1.01 }}
               />
               {name && (
@@ -105,7 +103,7 @@ const NameInputPage = ({ onNext }) => {
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
                 >
-                  ✨
+                  이름을 다 입력하고 다음 버튼을 눌러주세요
                 </motion.span>
               )}
             </div>

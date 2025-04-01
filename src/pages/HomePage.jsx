@@ -40,7 +40,7 @@ const HomePage = () => {
             className="rounded-lg mb-4 shadow-md hover:shadow-xl transition-all duration-300"
             style={{ width: "90%", margin: "0 auto" }}
           />
-          <p className="text-center text-sm text-[#F8E9CA]/80">✨ 프로필 결과 예시 ✨</p>
+          <p className="text-center text-sm text-[#F8E9CA]/80">프로필 결과 예시</p>
         </div>
       </motion.div>
 

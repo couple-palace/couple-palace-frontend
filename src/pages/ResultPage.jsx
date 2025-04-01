@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import profileGenerate from "../api/profileGenerate";
 import usePhotoStore from "../store/photoStore";
@@ -14,6 +14,7 @@ const ResultPage = () => {
   const [profileResult, setProfileResult] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const apiCallMade = useRef(false);
 
   // photoData가 Blob 객체라면, object URL을 생성 (메모이제이션 적용)
   const photoURL = useMemo(() => {
@@ -22,7 +23,8 @@ const ResultPage = () => {
 
   useEffect(() => {
     const generateProfileData = async () => {
-      if (questionsList.length >= 1) {
+      if (questionsList.length >= 1 && !apiCallMade.current) {
+        apiCallMade.current = true;
         try {
           setIsLoading(true);
           const response = await profileGenerate(questionsList, userData.job);
@@ -37,7 +39,7 @@ const ResultPage = () => {
       }
     };
     generateProfileData();
-  }, [questionsList, userData.job]);
+  }, []);
 
   return (
     <motion.div 

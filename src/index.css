@@ -115,6 +115,40 @@ button:focus-visible {
   margin-bottom: 0; /* Remove margin for the last button */
 }
 
+/* Custom input styling - fixed size with no transitions on width */
+.custom-input {
+  width: 100%; /* Full width of container */
+  padding: 1rem;
+  color: white;
+  background-color: rgba(42, 27, 61, 0.7);
+  border: 1px solid rgba(248, 233, 202, 0.4);
+  border-radius: 0.75rem;
+  outline: none;
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+  transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; /* Only transition these properties, not width/height */
+  display: block; /* Prevents inline behavior */
+  margin: 0 auto; /* Center the input */
+}
+
+.custom-input:focus {
+  border-color: rgb(248, 233, 202);
+  background-color: rgb(45, 31, 66);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.custom-input::placeholder {
+  color: rgb(156, 163, 175); /* placeholder-gray-400 */
+}
+
+/* Override any default input styles that might be conflicting */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

@@ -11,6 +11,7 @@ const UserInputPage = () => {
   const [photoPreview, setPhotoPreview] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isShaking, setIsShaking] = useState(false); // Add state for shake animation
   const setUserData = useUserStore((state) => state.setUserData);
   const setPhotoData = usePhotoStore((state) => state.setPhotoData);
   const navigate = useNavigate();
@@ -46,6 +47,14 @@ const UserInputPage = () => {
   const handleSubmit = async () => {
     if (!job.trim()) {
       setError("직업을 입력해주세요");
+      // 입력 필드 흔들림 애니메이션 적용
+      setIsShaking(true);
+      
+      // 애니메이션 후 상태 초기화
+      setTimeout(() => {
+        setIsShaking(false);
+      }, 600);
+      
       return;
     }
     
@@ -106,7 +115,7 @@ const UserInputPage = () => {
               <input
                 type="text"
                 placeholder="당신의 직업을 입력해주세요"
-                className="w-full p-4 text-white bg-[#2A1B3D]/70 border border-[#F8E9CA]/40 focus:border-[#F8E9CA] outline-none rounded-xl transition-all duration-300 focus:bg-[#2D1F42] focus:shadow-md"
+                className={`custom-input ${isShaking ? 'shake' : ''}`}
                 value={job}
                 onChange={(e) => setJob(e.target.value)}
               />
