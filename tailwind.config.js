@@ -9,6 +9,7 @@ export default {
         'maru-bold': ['MaruBuriBold', 'system-ui', 'sans-serif'],
         'maru-light': ['MaruBuriLight', 'system-ui', 'sans-serif'],
         'maru-extralight': ['MaruBuriExtraLight', 'system-ui', 'sans-serif'],
+        'bombaram': ['HSBombaram', 'MaruBuriSemiBold', 'system-ui', 'sans-serif'],
       },
     },
   },

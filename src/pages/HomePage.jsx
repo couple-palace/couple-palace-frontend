@@ -15,11 +15,11 @@ const HomePage = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
       >
-        <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-[#F8E9CA] to-[#FFD700] text-transparent bg-clip-text">
-          나의 커플 궁전 프로필 만들기
+        <h1 className="text-3xl mb-4 bg-gradient-to-r from-[#F8E9CA] to-[#FFD700] text-transparent bg-clip-text" style={{ fontFamily: "'HSBombaram', sans-serif" }}>
+          커플 궁전 프로필 테스트
         </h1>
         <p className="text-lg mb-3 text-[#F8E9CA]/90">
-          연애 가치관을 분석하고 나만의 특별한 닉네임을 찾아보세요!
+          연애, 결혼 가치관을 분석하고 커플궁전에 나가보세요!
         </p>
         <p className="text-sm mb-8 text-[#F8E9CA]/70">
           재미있는 퀴즈로 당신만의 개성이 담긴 커플 궁전 프로필을 만들어 드려요
@@ -66,7 +66,7 @@ const HomePage = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.6 }}
       >
-        5분 안에 완성되는 나만의 커플 궁전 프로필
+        3분 안에 완성되는 나만의 커플 궁전 프로필
       </motion.p>
     </div>
   );

@@ -32,8 +32,15 @@
     src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-ExtraLight.eot?#iefix) format("embedded-opentype"), url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-ExtraLight.woff2) format("woff2"), url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-ExtraLight.woff) format("woff"), url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-ExtraLight.ttf) format("truetype");
 }
 
+@font-face {
+    font-family: 'HSBombaram';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/HSBombaram.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 :root {
-  font-family: 'MaruBuri', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'MaruBuriSemiBold', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -70,6 +77,10 @@ h1 {
   line-height: 1.1;
 }
 
+.title-font {
+  font-family: 'HSBombaram', 'MaruBuriSemiBold', system-ui, sans-serif;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -87,6 +98,21 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+.quiz-option {
+  margin-bottom: 1rem; /* Add spacing between buttons */
+  width: 90%; /* Set button width to 90% of the screen */
+  max-width: 500px; /* Optional: Limit the maximum width */
+  display: flex; /* Use flexbox for alignment */
+  justify-content: center; /* Center text horizontally */
+  align-items: center; /* Center text vertically */
+  margin-left: auto; /* Center the button horizontally */
+  margin-right: auto; /* Center the button horizontally */
+}
+
+.quiz-option:last-child {
+  margin-bottom: 0; /* Remove margin for the last button */
 }
 
 @media (prefers-color-scheme: light) {
@@ -141,4 +167,15 @@ button:focus-visible {
     transparent
   );
   background-size: 30px 30px;
+}
+
+/* 입력 필드 흔들림 애니메이션 */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+  animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both;
 }

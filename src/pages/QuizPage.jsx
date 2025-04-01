@@ -88,9 +88,9 @@ const QuizPage = () => {
   const questionText = currentQuizQuestion?.question || "질문을 불러오는 중...";
   const options = currentQuizQuestion?.options || [];
   
-  // 디버깅을 위한 데이터 출력
-  console.log("현재 질문:", currentQuestion, currentQuizQuestion);
-  console.log("선택지 배열:", options);
+  // // 디버깅을 위한 데이터 출력
+  // console.log("현재 질문:", currentQuestion, currentQuizQuestion);
+  // console.log("선택지 배열:", options);
 
   // 에러 화면
   if (hasError) {
@@ -153,12 +153,13 @@ const QuizPage = () => {
             <h3 className="text-xl font-medium text-[#F8E9CA]">{questionText}</h3>
           </div>
 
-          <div className="space-y-3">
+          {/* 선택지 컨테이너 */}
+          <div className="flex flex-col min-h-[280px]">
             {options.map((option, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSelect(idx)}
-                className="w-full text-left p-4 bg-[#2A1B3D]/70 hover:bg-[#3D2A50] border border-[#F8E9CA]/20 rounded-xl transition-all duration-200"
+                className="quiz-option p-5 bg-[#2A1B3D]/70 hover:bg-[#3D2A50] border border-[#F8E9CA]/20 rounded-xl transition-all duration-200 hover:transform hover:scale-[1.02]"
               >
                 {option}
               </button>

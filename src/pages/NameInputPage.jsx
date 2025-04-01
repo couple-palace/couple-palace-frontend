@@ -1,29 +1,46 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import useUserStore from "../store/userStore";
 import { useNavigate } from "react-router-dom";
 
 const NameInputPage = ({ onNext }) => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [isShaking, setIsShaking] = useState(false);
+  const inputRef = useRef(null);
   const setStoreName = useUserStore((state) => state.setName);
   const [isAnimating, setIsAnimating] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (name.trim()) {
-      setIsAnimating(true);
-      setStoreName(name); // Zustand에 이름 저장
+    
+    if (!name.trim()) {
+      // 이름이 비어있을 때 흔들림 애니메이션 적용
+      setErrorMsg("이름을 입력해주세요!");
+      setIsShaking(true);
       
-      // 애니메이션 효과 후 다음 페이지로
+      // 애니메이션 후 상태 초기화
       setTimeout(() => {
-        // onNext가 함수인 경우에만 호출
-        if (typeof onNext === 'function') {
-          onNext();
-        }
-        navigate("/quiz");
+        setIsShaking(false);
       }, 600);
+      
+      return;
     }
+    
+    // 유효한 입력이 있는 경우
+    setErrorMsg("");
+    setIsAnimating(true);
+    setStoreName(name); // Zustand에 이름 저장
+    
+    // 애니메이션 효과 후 다음 페이지로
+    setTimeout(() => {
+      // onNext가 함수인 경우에만 호출
+      if (typeof onNext === 'function') {
+        onNext();
+      }
+      navigate("/quiz");
+    }, 600);
   };
 
   return (
@@ -45,7 +62,7 @@ const NameInputPage = ({ onNext }) => {
             프로필 만들기
           </h2>
           <p className="text-lg opacity-80 mb-3">
-            나만의 특별한 닉네임을 생성하기 위해<br />이름을 알려주세요
+            나만의 특별한 프로필을 생성하기 위해<br />이름을 알려주세요
           </p>
           <motion.p 
             className="text-sm opacity-60 px-4"
@@ -53,37 +70,61 @@ const NameInputPage = ({ onNext }) => {
             animate={{ opacity: 0.6 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
-            결과 화면에서만 사용되며 저장되지 않아요 💫
+            결과 화면에서만 사용되며 저장되지 않아요
           </motion.p>
         </motion.div>
 
-        {/* 입력 폼 */}
+        {/* 입력 폼 - space-y 클래스 제거하고 고정 레이아웃 사용 */}
         <motion.form 
           onSubmit={handleSubmit} 
-          className="space-y-8"
+          className="flex flex-col"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.6 }}
+          noValidate
         >
-          <div className="relative">
-            <motion.input
-              type="text"
-              required
-              placeholder="이름 또는 닉네임을 입력해주세요"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full p-5 text-lg bg-[#1C2333]/70 border border-[#F8E9CA]/40 focus:border-[#F8E9CA] outline-none rounded-xl transition-all duration-300 focus:bg-[#1F2A3D] focus:shadow-lg placeholder-gray-400"
-              whileFocus={{ scale: 1.01 }}
-            />
-            {name && (
-              <motion.span 
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#F8E9CA]"
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-              >
-                ✨
-              </motion.span>
-            )}
+          <div className="mb-8">
+            <div className="relative">
+              <motion.input
+                ref={inputRef}
+                type="text"
+                placeholder="이름 또는 닉네임을 입력해주세요"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (e.target.value.trim()) {
+                    setErrorMsg("");
+                  }
+                }}
+                className={`w-full p-5 text-lg bg-[#1C2333]/70 border border-[#F8E9CA]/40 focus:border-[#F8E9CA] outline-none rounded-xl transition-all duration-300 focus:bg-[#1F2A3D] focus:shadow-lg placeholder-gray-400 ${isShaking ? 'shake' : ''}`}
+                whileFocus={{ scale: 1.01 }}
+              />
+              {name && (
+                <motion.span 
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#F8E9CA]"
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                >
+                  ✨
+                </motion.span>
+              )}
+            </div>
+            
+            {/* 에러 메시지 영역 - 고정 높이로 공간 확보 */}
+            <div className="h-6 mt-2">
+              <AnimatePresence>
+                {errorMsg && (
+                  <motion.p 
+                    className="text-sm text-red-400"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    {errorMsg}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
           {/* 버튼 */}
