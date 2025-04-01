@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import useQuizStore from "../store/quizStore";
 import { useNavigate } from "react-router-dom";
 
@@ -122,86 +121,54 @@ const QuizPage = () => {
   }
 
   return (
-    <motion.div 
-      className="w-full min-h-screen flex flex-col items-center px-6 py-8 bg-gradient-to-b from-[#2a1b3d] to-[#1a0b2e] text-white"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
+    <div className="w-full min-h-screen flex flex-col items-center px-6 py-8 bg-gradient-to-b from-[#2a1b3d] to-[#1a0b2e] text-white">
       {/* 상단 진행 상태 */}
-      <motion.div 
-        className="w-full max-w-md mb-8"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.1, duration: 0.5 }}
-      >
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-[#F8E9CA]/80">질문 {currentQuestion + 1}/{quizData?.length || 0}</span>
-          <span className="text-sm font-medium text-[#F8E9CA]">{Math.round(progress)}%</span>
-        </div>
-        
-        <div className="w-full h-2 bg-[#1C2333] rounded-full overflow-hidden">
-          <motion.div 
-            className="h-full bg-gradient-to-r from-[#F8E9CA] to-[#FFD700]"
+      <div className="w-full max-w-md mb-8">
+        {/* Progress bar */}
+        <div className="relative h-8 w-full bg-[#1C2333] rounded-full overflow-hidden mb-4">
+          <div 
+            className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#F8E9CA] to-[#FFD700] transition-all duration-500 ease-in-out"
             style={{ width: `${progress}%` }}
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.5 }}
-          />
-        </div>
-      </motion.div>
-
-      {/* 애니메이션으로 질문 전환 */}
-      <div className="w-full max-w-md flex-grow flex flex-col justify-center">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentQuestion}
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="bg-[#1C2333]/70 p-6 rounded-2xl shadow-lg border border-[#F8E9CA]/10 backdrop-blur-sm"
           >
-            <motion.div 
-              className="mb-8"
-              initial={{ y: -10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.1, duration: 0.3 }}
-            >
-              <p className="text-xs text-[#F8E9CA]/60 mb-2">질문 {currentQuestion + 1}</p>
-              <h3 className="text-xl font-medium text-[#F8E9CA]">{questionText}</h3>
-            </motion.div>
+          </div>
+          <div className="absolute top-0 left-0 w-full h-full flex items-center justify-between px-4">
+            <span className="text-sm font-medium text-[#F8E9CA]">
+              질문 {currentQuestion + 1}/{quizData?.length || 0}
+            </span>
+            <span className="text-sm font-medium text-[#F8E9CA]">
+              {Math.round(progress)}%
+            </span>
+          </div>
+        </div>
+      </div>
 
-            <div className="space-y-3">
-              {options.map((option, idx) => (
-                <motion.button
-                  key={idx}
-                  onClick={() => handleSelect(idx)}
-                  className="w-full text-left p-4 bg-[#2A1B3D]/70 hover:bg-[#3D2A50] border border-[#F8E9CA]/20 rounded-xl transition-all duration-200"
-                  whileHover={{ scale: 1.02, backgroundColor: "rgba(61, 42, 80, 0.9)" }}
-                  whileTap={{ scale: 0.98 }}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 + idx * 0.1, duration: 0.3 }}
-                >
-                  {option}
-                </motion.button>
-              ))}
-            </div>
-          </motion.div>
-        </AnimatePresence>
+      {/* 질문 전환 */}
+      <div className="w-full max-w-md flex-grow flex flex-col justify-center">
+        <div className="bg-[#1C2333]/70 p-6 rounded-2xl shadow-lg border border-[#F8E9CA]/10 backdrop-blur-sm">
+          <div className="mb-8">
+            <p className="text-xs text-[#F8E9CA]/60 mb-2">질문 {currentQuestion + 1}</p>
+            <h3 className="text-xl font-medium text-[#F8E9CA]">{questionText}</h3>
+          </div>
+
+          <div className="space-y-3">
+            {options.map((option, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className="w-full text-left p-4 bg-[#2A1B3D]/70 hover:bg-[#3D2A50] border border-[#F8E9CA]/20 rounded-xl transition-all duration-200"
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* 하단 팁 */}
-      <motion.p 
-        className="mt-6 text-xs text-center text-[#F8E9CA]/50"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.8 }}
-      >
+      <p className="mt-6 text-xs text-center text-[#F8E9CA]/50">
         정답은 없어요. 자신의 생각을 솔직하게 선택해 주세요
-      </motion.p>
-    </motion.div>
+      </p>
+    </div>
   );
 };
 
