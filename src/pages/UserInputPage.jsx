@@ -166,7 +166,7 @@ const UserInputPage = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
                   <p className="text-[#F8E9CA]/70">클릭하여 이미지 업로드</p>
-                  <p className="text-xs text-[#F8E9CA]/50">JPG, PNG 파일</p>
+                  <p className="text-xs text-[#F8E9CA]/50">png, jpg, heic, heif 파일만 올려주세요</p>
                 </div>
               )}
             </div>

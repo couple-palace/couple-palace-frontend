@@ -10,8 +10,8 @@ const Layout = ({ children }) => {
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "#2A2E3D", // ✅ 배경색 적용
-      color: "#F8E9CA", // ✅ 글씨 색 적용
+      backgroundColor: "#2A2E3D",
+      color: "#F8E9CA",
       padding: "20px",
       borderRadius: "10px"
     }}>

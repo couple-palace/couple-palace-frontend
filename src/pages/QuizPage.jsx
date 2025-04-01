@@ -125,21 +125,24 @@ const QuizPage = () => {
       {/* 상단 진행 상태 */}
       <div className="w-full max-w-md mb-8">
         {/* Progress bar */}
-        <div className="relative h-8 w-full bg-[#1C2333] rounded-full overflow-hidden mb-4">
-          <div 
-            className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#F8E9CA] to-[#FFD700] transition-all duration-500 ease-in-out"
-            style={{ width: `${progress}%` }}
-          >
-          </div>
-          <div className="absolute top-0 left-0 w-full h-full flex items-center justify-between px-4">
-            <span className="text-sm font-medium text-[#F8E9CA]">
-              질문 {currentQuestion + 1}/{quizData?.length || 0}
-            </span>
-            <span className="text-sm font-medium text-[#F8E9CA]">
-              {Math.round(progress)}%
-            </span>
-          </div>
+        <div style={{
+          width: '100%',
+          height: '20px',
+          backgroundColor: '#1C2333',
+          borderRadius: '10px',
+          overflow: 'hidden',
+          marginBottom: '10px',
+          border: '1px solid rgba(248, 233, 202, 0.1)'
+        }}>
+          <div style={{
+            height: '100%',
+            width: `${progress}%`,
+            backgroundColor: '#F8E9CA',
+            borderRadius: '10px',
+            transition: 'width 0.3s ease-out'
+          }}></div>
         </div>
+        
       </div>
 
       {/* 질문 전환 */}
