@@ -167,11 +167,6 @@ const QuizPage = () => {
           </div>
         </div>
       </div>
-
-      {/* 하단 팁 */}
-      <p className="mt-6 text-xs text-center text-[#F8E9CA]/50">
-        정답은 없어요. 자신의 생각을 솔직하게 선택해 주세요
-      </p>
     </div>
   );
 };
