@@ -9,6 +9,10 @@ const useQuizStore = create((set) => ({
         { question_idx, answer_idx, type },
       ],
     })),
+  resetQuestions: () =>
+    set(() => ({
+      questionsList: [],
+    })),
 }));
 
 export default useQuizStore;

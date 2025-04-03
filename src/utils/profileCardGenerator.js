@@ -65,11 +65,11 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
   const lineHeight = 40; // 줄 간격
 
   ctx.fillStyle = "#FFFFFF"; // 텍스트 색상
-  ctx.font = "20px Arial";
+  ctx.font = "50px Arial";
   ctx.fillText(`${userData.name} ${profileData.nickname}`, textX, textY);
   textY += lineHeight;
 
-  ctx.font = "15px Arial";
+  ctx.font = "65px Arial";
   ctx.fillText("결혼가치관", textX, textY);
   textY += lineHeight;
 
@@ -78,11 +78,11 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
     textY += lineHeight;
   });
 
-  ctx.font = "20px Arial";
+  ctx.font = "50px Arial";
   ctx.fillText("MBTI", textX, textY);
   textY += lineHeight;
 
-  ctx.font = "15px Arial";
+  ctx.font = "45px Arial";
   ctx.fillText(profileData.mbti, textX, textY);
 
   // 최종 이미지 반환

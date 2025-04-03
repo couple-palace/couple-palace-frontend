@@ -19,10 +19,14 @@ const QuizPage = () => {
   const [hasError, setHasError] = useState(false);
   const [quizData, setQuizData] = useState(null);
   const setAnswer = useQuizStore((state) => state.setAnswer);
+  const resetQuestions = useQuizStore((state) => state.resetQuestions); // resetQuestions 추가
   const navigate = useNavigate();
 
   // quizData 로딩 및 유효성 검사
   useEffect(() => {
+    // 퀴즈 시작 시 questionsList 초기화
+    resetQuestions();
+
     const loadQuizData = async () => {
       try {
         // 정적 import로 불러오기 시도
@@ -59,7 +63,7 @@ const QuizPage = () => {
     };
     
     loadQuizData();
-  }, []);
+  }, [resetQuestions]);
 
   const handleSelect = (optionIndex) => {
     if (!quizData || !quizData[currentQuestion]) return;
