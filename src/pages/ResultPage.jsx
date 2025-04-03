@@ -5,7 +5,6 @@ import usePhotoStore from "../store/photoStore";
 import useQuizStore from "../store/quizStore";
 import useUserStore from "../store/userStore";
 import { useNavigate } from "react-router-dom";
-import profileBackground from "../assets/profile_background.png";
 import generateProfileCard from "../utils/profileCardGenerator";
 
 const ResultPage = () => {
@@ -84,7 +83,6 @@ const ResultPage = () => {
   return (
     <motion.div
       className="min-h-screen w-full flex flex-col items-center bg-cover bg-center pb-10"
-      style={{ backgroundImage: `url(${profileBackground})` }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}

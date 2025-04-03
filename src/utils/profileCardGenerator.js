@@ -1,5 +1,6 @@
 import profileBackground from "../assets/profile_background.png";
 import profileOverlay from "../assets/profile_overlay.png";
+import dividerImage from "../assets/divider.svg"; 
 
 /**
  * 마크다운 텍스트를 파싱하여 스타일 정보를 추출하는 함수
@@ -156,7 +157,11 @@ const renderMarkdownText = (ctx, text, x, y, maxWidth, baseFont) => {
   // 각 줄 렌더링
   const originalFont = ctx.font;
   let currentY = y;
-  const lineHeight = parseInt(baseFont) * 1.2; // 행간 설정
+  
+  // 폰트 크기 추출 및 줄 간격 설정 개선
+  const fontSizeMatch = baseFont.match(/(\d+)px/);
+  const fontSize = fontSizeMatch ? parseInt(fontSizeMatch[1]) : 35; // 기본값 35px
+  const lineHeight = fontSize * 1.8; // 줄 간격을 1.2에서 1.8로 증가
   
   for (const line of lines) {
     let currentX = x;
@@ -204,7 +209,7 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
 
   // 카드 크기 설정
   const CARD_WIDTH = 1024;
-  const CARD_HEIGHT = 1740;
+  const CARD_HEIGHT = 1970;
   canvas.width = CARD_WIDTH;
   canvas.height = CARD_HEIGHT;
 
@@ -219,10 +224,11 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
     });
 
   // 이미지 로드
-  const [backgroundImg, overlayImg, profileImg] = await Promise.all([
+  const [backgroundImg, overlayImg, profileImg, dividerImg] = await Promise.all([
     loadImage(profileBackground),
     loadImage(profileOverlay),
     loadImage(photoURL),
+    loadImage(dividerImage), // divider 이미지 로드
   ]);
 
   // STEP 1: overlay와 profileImg 합성
@@ -249,40 +255,71 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
   const profileX = (overlayWidth - profileWidth) / 2;
   const profileY = overlayHeight - profileHeight;
 
-  // STEP 2: background와 image-1 합성
   ctx.drawImage(backgroundImg, 0, 0, CARD_WIDTH, CARD_HEIGHT); // 배경
   ctx.drawImage(overlayImg, 0, 0, overlayWidth, overlayHeight); // overlay
   ctx.drawImage(profileImg, profileX, profileY, profileWidth, profileHeight); // profile
 
-  // STEP 3: 텍스트 추가
+  // STEP 2: divider와 이름 추가 (확실히 overlay 내부에 배치)
+  const dividerWidth = overlayWidth * 0.3; // divider 너비는 overlay의 80%
+  const dividerHeight = (dividerImg.height / dividerImg.width) * dividerWidth;
+
+  // divider의 위치를 overlay 내부로 배치
+  const dividerX = (overlayWidth - dividerWidth) / 2;
+  
+  // 첫 번째 divider는 overlay 바닥에서 위에 배치
+  const dividerY1 = overlayHeight - dividerHeight - 120; 
+  
+  // 두 번째 divider는 첫 번째 divider 아래에 충분한 간격을 두고 배치하되
+  // 반드시 overlay 내부에 있어야 함
+  const dividerY2 = overlayHeight - dividerHeight - 40;
+
+  // overlay 내부에 확실히 들어오는지 확인
+  if (dividerY1 > 0 && dividerY2 < overlayHeight) {
+    ctx.drawImage(dividerImg, dividerX, dividerY1, dividerWidth, dividerHeight); // 첫 번째 divider
+    ctx.drawImage(dividerImg, dividerX, dividerY2, dividerWidth, dividerHeight); // 두 번째 divider
+
+    // 이름 텍스트만 추가 (두 divider 사이에 배치)
+    const nameFont = "60px HSBombaram"; // 이름에 HSBombaram 폰트 적용
+    const nameText = userData.name || "이름"; // 이름만 표시
+    ctx.fillStyle = "#FFFFFF";
+    ctx.textAlign = "center";
+    ctx.font = nameFont;
+
+    const nameX = overlayWidth / 2; // 중앙 정렬
+    // 두 divider 사이의 수직 중앙에 이름 배치
+    const nameY = (dividerY1 + dividerHeight + dividerY2) / 2 + 10; // +10은 폰트의 중앙 정렬을 위한 미세 조정
+    ctx.fillText(nameText, nameX, nameY); // 단순 텍스트이므로 fillText로 충분
+  }
+
+  // STEP 3: 텍스트 추가 (overlay 하단에서 20px 떨어진 부분부터 시작, 확실히!)
+  ctx.textAlign = "left"; // 텍스트 정렬을 다시 왼쪽으로 설정
   const textX = 50; // 텍스트 시작 X 좌표
-  let textY = overlayHeight + 50; // 텍스트 시작 Y 좌표
-  const lineHeight = 60; // 줄 간격
+  let textY = overlayHeight + 80; // overlay 하단에서 확실히 떨어진 위치
   const MAX_TEXT_WIDTH = CARD_WIDTH - 100; // 텍스트 최대 너비
 
   ctx.fillStyle = "#FFFFFF"; // 텍스트 색상
 
-  // 이름과 닉네임 (HSBombaram 폰트 적용, 닉네임은 항상 볼드체)
-  const nameFont = "50px HSBombaram"; // Maruburi에서 HSBombaram으로 변경
-  // 닉네임을 볼드체로 표시하기 위해 **로 감싸기
-  const nameText = `${userData.name} **${profileData.nickname}**`;
-  textY = renderMarkdownText(ctx, nameText, textX, textY, MAX_TEXT_WIDTH, nameFont);
-  textY += 20; // 여백 추가
-
+  // 닉네임 추가 (굵게 표시)
+  const nicknameFont = "50px Maruburi";
+  textY = renderMarkdownText(ctx, `**${profileData.nickname}**`, textX, textY, MAX_TEXT_WIDTH, nicknameFont);
+  textY += 30; // 닉네임과 결혼가치관 사이 여백 증가
+  
   // 결혼가치관 제목
   const titleFont = "50px Maruburi";
   textY = renderMarkdownText(ctx, "**결혼가치관**", textX, textY, MAX_TEXT_WIDTH, titleFont);
+  textY += 20; // 제목과 첫 번째 항목 사이 여백 추가
   
-  // 결혼가치관 항목들 (마크다운 지원)
+  // 결혼가치관 항목들
   const conditionFont = "35px Maruburi";
   profileData.marriage_conditions.forEach((condition) => {
     textY = renderMarkdownText(ctx, condition, textX, textY, MAX_TEXT_WIDTH, conditionFont);
-    textY += 10; // 항목 간 여백
+    textY += 20; // 항목 간 여백 증가
   });
-  textY += 20; // 섹션 간 여백
+  textY += 30; // 섹션 간 여백 증가
 
-  // MBTI 제목 및 값 (마크다운 지원)
+  // MBTI 제목 및 값
   textY = renderMarkdownText(ctx, "**MBTI**", textX, textY, MAX_TEXT_WIDTH, "50px Maruburi");
+  textY += 20; // MBTI 제목과 값 사이 여백 추가
   textY = renderMarkdownText(ctx, profileData.mbti, textX, textY, MAX_TEXT_WIDTH, "35px Maruburi");
 
   // 최종 이미지 반환
