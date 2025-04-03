@@ -164,10 +164,13 @@ const renderMarkdownText = (ctx, text, x, y, maxWidth, baseFont) => {
     // 각 줄에 대해 마크다운 스타일을 적용하여 렌더링
     const lineSegments = parseMarkdown(line);
     for (const segment of lineSegments) {
+      // 폰트 설정 - 기본 폰트와 동일한 폰트 패밀리 유지
+      const fontFamily = baseFont.includes('HSBombaram') ? 'HSBombaram' : 'Maruburi';
+      
       if (segment.isBold) {
-        ctx.font = baseFont.replace(/(\d+)px/, (match, size) => `bold ${size}px`);
+        ctx.font = baseFont.replace(/(\d+px)(.*)/, (match, size) => `bold ${size} ${fontFamily}`);
       } else if (segment.isItalic) {
-        ctx.font = baseFont.replace(/(\d+)px/, (match, size) => `italic ${size}px`);
+        ctx.font = baseFont.replace(/(\d+px)(.*)/, (match, size) => `italic ${size} ${fontFamily}`);
       } else {
         ctx.font = baseFont;
       }
@@ -193,6 +196,11 @@ const renderMarkdownText = (ctx, text, x, y, maxWidth, baseFont) => {
 const generateProfileCard = async (userData, profileData, photoURL) => {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
+
+  // 폰트 로딩 확인
+  document.fonts.ready.then(() => {
+    console.log('폰트 로딩 완료');
+  });
 
   // 카드 크기 설정
   const CARD_WIDTH = 1024;
@@ -254,18 +262,19 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
 
   ctx.fillStyle = "#FFFFFF"; // 텍스트 색상
 
-  // 이름과 닉네임 (마크다운 지원)
-  const nameFont = "50px Arial";
-  const nameText = `**${userData.name}** ${profileData.nickname}`;
+  // 이름과 닉네임 (HSBombaram 폰트 적용, 닉네임은 항상 볼드체)
+  const nameFont = "50px HSBombaram"; // Maruburi에서 HSBombaram으로 변경
+  // 닉네임을 볼드체로 표시하기 위해 **로 감싸기
+  const nameText = `${userData.name} **${profileData.nickname}**`;
   textY = renderMarkdownText(ctx, nameText, textX, textY, MAX_TEXT_WIDTH, nameFont);
   textY += 20; // 여백 추가
 
   // 결혼가치관 제목
-  const titleFont = "65px Arial";
+  const titleFont = "50px Maruburi";
   textY = renderMarkdownText(ctx, "**결혼가치관**", textX, textY, MAX_TEXT_WIDTH, titleFont);
   
   // 결혼가치관 항목들 (마크다운 지원)
-  const conditionFont = "45px Arial";
+  const conditionFont = "35px Maruburi";
   profileData.marriage_conditions.forEach((condition) => {
     textY = renderMarkdownText(ctx, condition, textX, textY, MAX_TEXT_WIDTH, conditionFont);
     textY += 10; // 항목 간 여백
@@ -273,8 +282,8 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
   textY += 20; // 섹션 간 여백
 
   // MBTI 제목 및 값 (마크다운 지원)
-  textY = renderMarkdownText(ctx, "**MBTI**", textX, textY, MAX_TEXT_WIDTH, "50px Arial");
-  textY = renderMarkdownText(ctx, profileData.mbti, textX, textY, MAX_TEXT_WIDTH, "45px Arial");
+  textY = renderMarkdownText(ctx, "**MBTI**", textX, textY, MAX_TEXT_WIDTH, "50px Maruburi");
+  textY = renderMarkdownText(ctx, profileData.mbti, textX, textY, MAX_TEXT_WIDTH, "35px Maruburi");
 
   // 최종 이미지 반환
   return canvas.toDataURL("image/png");
