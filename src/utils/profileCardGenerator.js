@@ -49,10 +49,26 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
   // STEP 1: overlay와 profileImg 합성
   const overlayWidth = CARD_WIDTH;
   const overlayHeight = (overlayImg.height / overlayImg.width) * overlayWidth;
-  const profileWidth = overlayWidth * 0.6; // overlay의 60% 이하
-  const profileHeight = overlayHeight * 0.7; // overlay의 70% 이하
-  const profileX = (overlayWidth - profileWidth) / 2; // 중앙 정렬
-  const profileY = overlayHeight - profileHeight; // 맨 밑 맞춤
+  
+  // 이미지 비율 유지하면서 최대 크기 제한
+  // 원본 이미지 비율 계산
+  const profileAspectRatio = profileImg.width / profileImg.height;
+  
+  // 기본적으로 너비는 overlay의 70%로 설정
+  let profileWidth = overlayWidth * 0.7;
+  // 해당 너비에 맞는 높이 계산 (비율 유지)
+  let profileHeight = profileWidth / profileAspectRatio;
+  
+  // 계산된 높이가 overlay 높이의 90%를 초과하는지 확인
+  if (profileHeight > overlayHeight * 0.9) {
+    // 높이가 제한을 초과하면, 높이를 90%로 제한하고 너비 재계산
+    profileHeight = overlayHeight * 0.9;
+    profileWidth = profileHeight * profileAspectRatio; // 비율 유지
+  }
+  
+  // 중앙 정렬 및 맨 밑 맞춤 계산
+  const profileX = (overlayWidth - profileWidth) / 2;
+  const profileY = overlayHeight - profileHeight;
 
   // STEP 2: background와 image-1 합성
   ctx.drawImage(backgroundImg, 0, 0, CARD_WIDTH, CARD_HEIGHT); // 배경
