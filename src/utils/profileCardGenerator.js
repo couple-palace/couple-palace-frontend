@@ -2,15 +2,186 @@ import profileBackground from "../assets/profile_background.png";
 import profileOverlay from "../assets/profile_overlay.png";
 
 /**
- * 프로필 카드 이미지 생성 기능
- * 
- * 이 파일은 다음 요소들을 결합하여 하나의 프로필 카드 이미지를 생성합니다:
- * - 배경 이미지 (profile_background.png)
- * - 오버레이 이미지 (profile_overlay.png)
- * - 사용자 프로필 사진 (배경 제거됨)
- * - 사용자 이름
- * - MBTI, 애칭, 결혼 조건 등 프로필 데이터
+ * 마크다운 텍스트를 파싱하여 스타일 정보를 추출하는 함수
+ * @param {string} text - 마크다운 포맷의 텍스트
+ * @returns {Array} - 텍스트 조각과 스타일 정보 배열
  */
+const parseMarkdown = (text) => {
+  if (!text) return [];
+
+  const segments = [];
+  let currentIndex = 0;
+  
+  // 볼드체 (**text**)
+  const boldRegex = /\*\*(.*?)\*\*/g;
+  let boldMatch;
+  while ((boldMatch = boldRegex.exec(text)) !== null) {
+    const startPos = boldMatch.index;
+    const endPos = boldMatch.index + boldMatch[0].length;
+
+    // 볼드 마크 이전의 일반 텍스트
+    if (startPos > currentIndex) {
+      segments.push({ 
+        text: text.substring(currentIndex, startPos),
+        isBold: false,
+        isItalic: false 
+      });
+    }
+
+    // 볼드 처리된 텍스트
+    segments.push({ 
+      text: boldMatch[1], 
+      isBold: true,
+      isItalic: false 
+    });
+
+    currentIndex = endPos;
+  }
+
+  // 이탤릭체 (*text*)
+  const italicRegex = /\*(.*?)\*/g;
+  let italicMatch;
+  let remainingText = text.substring(currentIndex);
+  let offset = currentIndex;
+  currentIndex = 0;
+
+  while ((italicMatch = italicRegex.exec(remainingText)) !== null) {
+    const startPos = italicMatch.index;
+    const endPos = italicMatch.index + italicMatch[0].length;
+
+    // 이탤릭 마크 이전의 일반 텍스트
+    if (startPos > currentIndex) {
+      segments.push({ 
+        text: remainingText.substring(currentIndex, startPos),
+        isBold: false,
+        isItalic: false 
+      });
+    }
+
+    // 이탤릭 처리된 텍스트
+    segments.push({ 
+      text: italicMatch[1], 
+      isBold: false,
+      isItalic: true 
+    });
+
+    currentIndex = endPos;
+  }
+
+  // 남은 텍스트 처리
+  if (currentIndex < remainingText.length) {
+    segments.push({ 
+      text: remainingText.substring(currentIndex),
+      isBold: false,
+      isItalic: false 
+    });
+  }
+
+  // 파싱된 세그먼트가 없는 경우 원본 텍스트를 그대로 세그먼트로 반환
+  if (segments.length === 0) {
+    segments.push({ 
+      text: text,
+      isBold: false,
+      isItalic: false 
+    });
+  }
+
+  return segments;
+};
+
+/**
+ * 텍스트를 주어진 최대 너비에 맞게 줄바꿈하는 함수
+ * @param {CanvasRenderingContext2D} ctx - Canvas Context
+ * @param {string} text - 원본 텍스트
+ * @param {number} maxWidth - 최대 너비
+ * @returns {string[]} 줄바꿈된 텍스트 배열
+ */
+const wrapText = (ctx, text, maxWidth) => {
+  const words = text.split(' ');
+  const lines = [];
+  let currentLine = words[0];
+
+  for (let i = 1; i < words.length; i++) {
+    const word = words[i];
+    const width = ctx.measureText(currentLine + ' ' + word).width;
+    
+    if (width < maxWidth) {
+      currentLine += ' ' + word;
+    } else {
+      lines.push(currentLine);
+      currentLine = word;
+    }
+  }
+  
+  lines.push(currentLine);
+  return lines;
+};
+
+/**
+ * 마크다운이 포함된 텍스트를 캔버스에 렌더링하는 함수
+ * @param {CanvasRenderingContext2D} ctx - Canvas Context
+ * @param {string} text - 마크다운 형식의 텍스트
+ * @param {number} x - x 좌표
+ * @param {number} y - y 좌표
+ * @param {number} maxWidth - 최대 너비
+ * @param {string} baseFont - 기본 폰트 설정
+ * @returns {number} - 다음 텍스트 y 위치
+ */
+const renderMarkdownText = (ctx, text, x, y, maxWidth, baseFont) => {
+  const segments = parseMarkdown(text);
+  const words = text.split(' ');
+  const lines = [];
+  let currentLine = '';
+  let currentLineWidth = 0;
+  
+  // 줄바꿈 처리
+  for (const word of words) {
+    ctx.font = baseFont; // 측정을 위한 기본 폰트
+    const wordWidth = ctx.measureText(word + ' ').width;
+    
+    if (currentLineWidth + wordWidth <= maxWidth) {
+      currentLine += word + ' ';
+      currentLineWidth += wordWidth;
+    } else {
+      lines.push(currentLine.trim());
+      currentLine = word + ' ';
+      currentLineWidth = wordWidth;
+    }
+  }
+  
+  if (currentLine.trim() !== '') {
+    lines.push(currentLine.trim());
+  }
+  
+  // 각 줄 렌더링
+  const originalFont = ctx.font;
+  let currentY = y;
+  const lineHeight = parseInt(baseFont) * 1.2; // 행간 설정
+  
+  for (const line of lines) {
+    let currentX = x;
+    
+    // 각 줄에 대해 마크다운 스타일을 적용하여 렌더링
+    const lineSegments = parseMarkdown(line);
+    for (const segment of lineSegments) {
+      if (segment.isBold) {
+        ctx.font = baseFont.replace(/(\d+)px/, (match, size) => `bold ${size}px`);
+      } else if (segment.isItalic) {
+        ctx.font = baseFont.replace(/(\d+)px/, (match, size) => `italic ${size}px`);
+      } else {
+        ctx.font = baseFont;
+      }
+      
+      ctx.fillText(segment.text, currentX, currentY);
+      currentX += ctx.measureText(segment.text).width;
+    }
+    
+    currentY += lineHeight;
+  }
+  
+  ctx.font = originalFont; // 폰트 상태 복원
+  return currentY; // 다음 텍스트의 Y 위치 반환
+};
 
 /**
  * 프로필 카드 이미지 생성
@@ -78,28 +249,32 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
   // STEP 3: 텍스트 추가
   const textX = 50; // 텍스트 시작 X 좌표
   let textY = overlayHeight + 50; // 텍스트 시작 Y 좌표
-  const lineHeight = 40; // 줄 간격
+  const lineHeight = 60; // 줄 간격
+  const MAX_TEXT_WIDTH = CARD_WIDTH - 100; // 텍스트 최대 너비
 
   ctx.fillStyle = "#FFFFFF"; // 텍스트 색상
-  ctx.font = "50px Arial";
-  ctx.fillText(`${userData.name} ${profileData.nickname}`, textX, textY);
-  textY += lineHeight;
 
-  ctx.font = "65px Arial";
-  ctx.fillText("결혼가치관", textX, textY);
-  textY += lineHeight;
+  // 이름과 닉네임 (마크다운 지원)
+  const nameFont = "50px Arial";
+  const nameText = `**${userData.name}** ${profileData.nickname}`;
+  textY = renderMarkdownText(ctx, nameText, textX, textY, MAX_TEXT_WIDTH, nameFont);
+  textY += 20; // 여백 추가
 
+  // 결혼가치관 제목
+  const titleFont = "65px Arial";
+  textY = renderMarkdownText(ctx, "**결혼가치관**", textX, textY, MAX_TEXT_WIDTH, titleFont);
+  
+  // 결혼가치관 항목들 (마크다운 지원)
+  const conditionFont = "45px Arial";
   profileData.marriage_conditions.forEach((condition) => {
-    ctx.fillText(condition, textX, textY);
-    textY += lineHeight;
+    textY = renderMarkdownText(ctx, condition, textX, textY, MAX_TEXT_WIDTH, conditionFont);
+    textY += 10; // 항목 간 여백
   });
+  textY += 20; // 섹션 간 여백
 
-  ctx.font = "50px Arial";
-  ctx.fillText("MBTI", textX, textY);
-  textY += lineHeight;
-
-  ctx.font = "45px Arial";
-  ctx.fillText(profileData.mbti, textX, textY);
+  // MBTI 제목 및 값 (마크다운 지원)
+  textY = renderMarkdownText(ctx, "**MBTI**", textX, textY, MAX_TEXT_WIDTH, "50px Arial");
+  textY = renderMarkdownText(ctx, profileData.mbti, textX, textY, MAX_TEXT_WIDTH, "45px Arial");
 
   // 최종 이미지 반환
   return canvas.toDataURL("image/png");
