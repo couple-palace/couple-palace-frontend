@@ -1,7 +1,14 @@
-# 💘 Couple Palace Quiz - Frontend
+# 💘 커플 궁전 프로필 테스트 (Couple Palace Profile Test)
 
-**🚀 연애 가치관 테스트 웹앱 (Frontend Repository)**  
-이 프로젝트는 사용자의 연애 가치관을 분석하고 닉네임을 생성하는 웹 애플리케이션입니다.
+## 📝 프로젝트 설명
+
+커플 궁전 프로필 테스트는 사용자의 연애 및 결혼 가치관을 분석하고 개인화된 프로필을 생성하는 웹 애플리케이션입니다. 사용자는 일련의 퀴즈 질문에 답하고 기본 정보를 제공하면, 애플리케이션이 사용자에게 맞춤형 MBTI 유형, 애칭, 그리고 결혼 조건을 포함한 프로필을 제공합니다.
+
+주요 기능:
+- 사용자 이름 및 직업 입력
+- 맞춤형 가치관 퀴즈 응답
+- 선택적 프로필 사진 업로드
+- AI 기반 프로필 결과 생성
 
 ---
 
@@ -9,7 +16,7 @@
 
 ### 1️⃣ **프로젝트 클론**
 ```bash
-git clone https://github.com/YOUR-REPO/couple-palace-frontend.git
+git clone https://github.com/couple-palace/couple-palace-frontend.git
 cd couple-palace-frontend
 ```
 
@@ -24,24 +31,17 @@ node -v
 ```bash
 yarn
 ```
-또는
-```bash
-npm install
-```
 
 ### 3️⃣ **개발 서버 실행**
 ```bash
 yarn dev
 ```
-또는
-```bash
-npm run dev
-```
+
 > **기본 실행 주소:** `http://localhost:5173`
 
 ---
 
-## 📌 프로젝트 구조
+## 🏗 프로젝트 구조
 ```
 📂 src
  ┣ 📂 components       # UI 컴포넌트 모음
@@ -99,9 +99,8 @@ npm run dev
 ## 📌 협업 규칙
 
 ### 1️⃣ **Branch 전략**
-- `main` → 배포용 브랜치
-- `dev` → 개발 브랜치
-- 새로운 기능 추가 시 `feature/기능명` 브랜치에서 작업 후 `dev`로 PR 요청
+- `main` → 메인 브랜치
+- 새로운 기능 추가 시 `dev/기능명` 브랜치에서 작업 후 `main`로 PR 요청
 
 ### 2️⃣ **Commit 메시지 규칙**
 - `feat: 퀴즈 페이지 UI 추가`
@@ -110,13 +109,6 @@ npm run dev
 
 ---
 
-## 📌 기여 방법
-1. 이 프로젝트를 클론합니다.
-2. `dev` 브랜치에서 새로운 기능을 개발합니다.
-3. PR을 요청합니다.
 
-💡 **문의:** 팀 채팅 또는 GitHub Issues 활용!
-
----
 
 🚀 **이제 `yarn dev` 실행 후 개발을 시작하세요!** 🎉
