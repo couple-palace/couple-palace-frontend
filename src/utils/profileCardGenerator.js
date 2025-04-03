@@ -1,4 +1,3 @@
-import profileBackground from "../assets/profile_background.png";
 import profileOverlay from "../assets/profile_overlay.png";
 import dividerImage from "../assets/divider.svg"; 
 
@@ -199,19 +198,19 @@ const renderMarkdownText = (ctx, text, x, y, maxWidth, baseFont) => {
  * @returns {Promise<string>} - 생성된 프로필 카드 이미지의 Data URL
  */
 const generateProfileCard = async (userData, profileData, photoURL) => {
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
-
-  // 폰트 로딩 확인
-  document.fonts.ready.then(() => {
-    console.log('폰트 로딩 완료');
-  });
-
-  // 카드 크기 설정
+  // 먼저 필요한 높이를 계산하기 위한 임시 캔버스 생성
+  const tempCanvas = document.createElement("canvas");
+  const tempCtx = tempCanvas.getContext("2d");
+  
+  // 카드 너비는 고정
   const CARD_WIDTH = 1024;
-  const CARD_HEIGHT = 1970;
-  canvas.width = CARD_WIDTH;
-  canvas.height = CARD_HEIGHT;
+  tempCanvas.width = CARD_WIDTH;
+  // 임시로 큰 값 설정
+  tempCanvas.height = 3000;
+  
+  // 폰트 로딩 확인
+  await document.fonts.ready;
+  console.log('폰트 로딩 완료');
 
   // 이미지 로드 함수
   const loadImage = (src) =>
@@ -224,104 +223,128 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
     });
 
   // 이미지 로드
-  const [backgroundImg, overlayImg, profileImg, dividerImg] = await Promise.all([
-    loadImage(profileBackground),
+  const [overlayImg, profileImg, dividerImg] = await Promise.all([
     loadImage(profileOverlay),
     loadImage(photoURL),
-    loadImage(dividerImage), // divider 이미지 로드
+    loadImage(dividerImage),
   ]);
 
-  // STEP 1: overlay와 profileImg 합성
+  // overlay 크기 계산
   const overlayWidth = CARD_WIDTH;
   const overlayHeight = (overlayImg.height / overlayImg.width) * overlayWidth;
   
-  // 이미지 비율 유지하면서 최대 크기 제한
-  // 원본 이미지 비율 계산
+  // 프로필 이미지 크기 계산
   const profileAspectRatio = profileImg.width / profileImg.height;
-  
-  // 기본적으로 너비는 overlay의 70%로 설정
   let profileWidth = overlayWidth * 0.7;
-  // 해당 너비에 맞는 높이 계산 (비율 유지)
   let profileHeight = profileWidth / profileAspectRatio;
   
-  // 계산된 높이가 overlay 높이의 90%를 초과하는지 확인
   if (profileHeight > overlayHeight * 0.9) {
-    // 높이가 제한을 초과하면, 높이를 90%로 제한하고 너비 재계산
     profileHeight = overlayHeight * 0.9;
-    profileWidth = profileHeight * profileAspectRatio; // 비율 유지
+    profileWidth = profileHeight * profileAspectRatio;
   }
   
-  // 중앙 정렬 및 맨 밑 맞춤 계산
+  // divider 크기 계산
+  const dividerWidth = overlayWidth * 0.3;
+  const dividerHeight = (dividerImg.height / dividerImg.width) * dividerWidth;
+  
+  // 텍스트 렌더링 위치 계산
+  const dividerY1 = overlayHeight - dividerHeight - 120;
+  const dividerY2 = overlayHeight - dividerHeight - 40;
+  
+  // STEP 3의 시작 위치 계산
+  let textY = overlayHeight + 80;
+  const textX = 50;
+  const MAX_TEXT_WIDTH = CARD_WIDTH - 100;
+  
+  // 텍스트 렌더링을 시뮬레이션하여 최종 높이 계산
+  tempCtx.font = "50px Maruburi"; // 닉네임 폰트
+  textY = renderMarkdownText(tempCtx, `**${profileData.nickname}**`, textX, textY, MAX_TEXT_WIDTH, "50px Maruburi");
+  textY += 30;
+  
+  // 결혼가치관 제목
+  textY = renderMarkdownText(tempCtx, "**결혼가치관**", textX, textY, MAX_TEXT_WIDTH, "50px Maruburi");
+  textY += 20;
+  
+  // 결혼가치관 항목들
+  profileData.marriage_conditions.forEach((condition) => {
+    textY = renderMarkdownText(tempCtx, condition, textX, textY, MAX_TEXT_WIDTH, "35px Maruburi");
+    textY += 20;
+  });
+  textY += 30;
+  
+  // MBTI 제목 및 값
+  textY = renderMarkdownText(tempCtx, "**MBTI**", textX, textY, MAX_TEXT_WIDTH, "50px Maruburi");
+  textY += 20;
+  textY = renderMarkdownText(tempCtx, profileData.mbti, textX, textY, MAX_TEXT_WIDTH, "35px Maruburi");
+  
+  // 최종 높이 계산 (마지막 텍스트 위치 + 추가 여백)
+  const CARD_HEIGHT = textY + 100; // 마지막 텍스트 아래 100px 여백 추가
+  
+  // 실제 캔버스 생성 및 크기 설정
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = CARD_WIDTH;
+  canvas.height = CARD_HEIGHT;
+  
+  // 배경 그리기
+  ctx.fillStyle = '#2A2E3D';
+  ctx.fillRect(0, 0, CARD_WIDTH, CARD_HEIGHT);
+  
+  // 테두리 그리기
+  ctx.strokeStyle = 'rgba(247, 223, 28, 0.64)';
+  ctx.lineWidth = 6;
+  ctx.strokeRect(3, 3, CARD_WIDTH - 6, CARD_HEIGHT - 6);
+  
+  // Overlay 및 프로필 이미지 그리기
+  ctx.drawImage(overlayImg, 0, 0, overlayWidth, overlayHeight);
+  
+  // 프로필 이미지 위치 계산 및 그리기
   const profileX = (overlayWidth - profileWidth) / 2;
   const profileY = overlayHeight - profileHeight;
-
-  ctx.drawImage(backgroundImg, 0, 0, CARD_WIDTH, CARD_HEIGHT); // 배경
-  ctx.drawImage(overlayImg, 0, 0, overlayWidth, overlayHeight); // overlay
-  ctx.drawImage(profileImg, profileX, profileY, profileWidth, profileHeight); // profile
-
-  // STEP 2: divider와 이름 추가 (확실히 overlay 내부에 배치)
-  const dividerWidth = overlayWidth * 0.3; // divider 너비는 overlay의 80%
-  const dividerHeight = (dividerImg.height / dividerImg.width) * dividerWidth;
-
-  // divider의 위치를 overlay 내부로 배치
-  const dividerX = (overlayWidth - dividerWidth) / 2;
+  ctx.drawImage(profileImg, profileX, profileY, profileWidth, profileHeight);
   
-  // 첫 번째 divider는 overlay 바닥에서 위에 배치
-  const dividerY1 = overlayHeight - dividerHeight - 120; 
-  
-  // 두 번째 divider는 첫 번째 divider 아래에 충분한 간격을 두고 배치하되
-  // 반드시 overlay 내부에 있어야 함
-  const dividerY2 = overlayHeight - dividerHeight - 40;
-
-  // overlay 내부에 확실히 들어오는지 확인
+  // Divider 및 이름 그리기
   if (dividerY1 > 0 && dividerY2 < overlayHeight) {
-    ctx.drawImage(dividerImg, dividerX, dividerY1, dividerWidth, dividerHeight); // 첫 번째 divider
-    ctx.drawImage(dividerImg, dividerX, dividerY2, dividerWidth, dividerHeight); // 두 번째 divider
-
-    // 이름 텍스트만 추가 (두 divider 사이에 배치)
-    const nameFont = "60px HSBombaram"; // 이름에 HSBombaram 폰트 적용
-    const nameText = userData.name || "이름"; // 이름만 표시
+    ctx.drawImage(dividerImg, (overlayWidth - dividerWidth) / 2, dividerY1, dividerWidth, dividerHeight);
+    ctx.drawImage(dividerImg, (overlayWidth - dividerWidth) / 2, dividerY2, dividerWidth, dividerHeight);
+    
+    // 이름 텍스트 그리기
+    const nameFont = "60px HSBombaram";
+    const nameText = userData.name || "이름";
     ctx.fillStyle = "#FFFFFF";
     ctx.textAlign = "center";
     ctx.font = nameFont;
-
-    const nameX = overlayWidth / 2; // 중앙 정렬
-    // 두 divider 사이의 수직 중앙에 이름 배치
-    const nameY = (dividerY1 + dividerHeight + dividerY2) / 2 + 10; // +10은 폰트의 중앙 정렬을 위한 미세 조정
-    ctx.fillText(nameText, nameX, nameY); // 단순 텍스트이므로 fillText로 충분
+    
+    const nameX = overlayWidth / 2;
+    const nameY = (dividerY1 + dividerHeight + dividerY2) / 2 + 10;
+    ctx.fillText(nameText, nameX, nameY);
   }
-
-  // STEP 3: 텍스트 추가 (overlay 하단에서 20px 떨어진 부분부터 시작, 확실히!)
-  ctx.textAlign = "left"; // 텍스트 정렬을 다시 왼쪽으로 설정
-  const textX = 50; // 텍스트 시작 X 좌표
-  let textY = overlayHeight + 80; // overlay 하단에서 확실히 떨어진 위치
-  const MAX_TEXT_WIDTH = CARD_WIDTH - 100; // 텍스트 최대 너비
-
-  ctx.fillStyle = "#FFFFFF"; // 텍스트 색상
-
-  // 닉네임 추가 (굵게 표시)
-  const nicknameFont = "50px Maruburi";
-  textY = renderMarkdownText(ctx, `**${profileData.nickname}**`, textX, textY, MAX_TEXT_WIDTH, nicknameFont);
-  textY += 30; // 닉네임과 결혼가치관 사이 여백 증가
+  
+  // 텍스트 추가
+  ctx.textAlign = "left";
+  textY = overlayHeight + 80; // 초기화
+  ctx.fillStyle = "#FFFFFF";
+  
+  // 닉네임 추가
+  textY = renderMarkdownText(ctx, `**${profileData.nickname}**`, textX, textY, MAX_TEXT_WIDTH, "50px Maruburi");
+  textY += 30;
   
   // 결혼가치관 제목
-  const titleFont = "50px Maruburi";
-  textY = renderMarkdownText(ctx, "**결혼가치관**", textX, textY, MAX_TEXT_WIDTH, titleFont);
-  textY += 20; // 제목과 첫 번째 항목 사이 여백 추가
+  textY = renderMarkdownText(ctx, "**결혼가치관**", textX, textY, MAX_TEXT_WIDTH, "50px Maruburi");
+  textY += 20;
   
   // 결혼가치관 항목들
-  const conditionFont = "35px Maruburi";
   profileData.marriage_conditions.forEach((condition) => {
-    textY = renderMarkdownText(ctx, condition, textX, textY, MAX_TEXT_WIDTH, conditionFont);
-    textY += 20; // 항목 간 여백 증가
+    textY = renderMarkdownText(ctx, condition, textX, textY, MAX_TEXT_WIDTH, "35px Maruburi");
+    textY += 20;
   });
-  textY += 30; // 섹션 간 여백 증가
-
+  textY += 30;
+  
   // MBTI 제목 및 값
   textY = renderMarkdownText(ctx, "**MBTI**", textX, textY, MAX_TEXT_WIDTH, "50px Maruburi");
-  textY += 20; // MBTI 제목과 값 사이 여백 추가
+  textY += 20;
   textY = renderMarkdownText(ctx, profileData.mbti, textX, textY, MAX_TEXT_WIDTH, "35px Maruburi");
-
+  
   // 최종 이미지 반환
   return canvas.toDataURL("image/png");
 };
