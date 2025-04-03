@@ -142,22 +142,22 @@ const UserInputPage = () => {
               />
               
               {photoPreview ? (
-                <div className="relative w-full">
+                <div className="relative w-full max-w-[160px] mx-auto">
                   <img 
                     src={photoPreview} 
                     alt="미리보기" 
-                    className="w-full h-48 object-cover rounded-lg"
+                    className="w-full h-auto max-h-24 object-contain rounded-lg"
                   />
-                  <div className="absolute top-2 right-2">
+                  <div className="absolute top-1 right-1">
                     <button 
                       onClick={(e) => {
                         e.stopPropagation();
                         setPhoto(null);
                         setPhotoPreview(null);
                       }}
-                      className="bg-[#2A1B3D]/70 hover:bg-[#2A1B3D] p-2 rounded-full"
+                      className="bg-[#2A1B3D]/70 hover:bg-[#2A1B3D] p-1 rounded-full"
                     >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M18 6L6 18M6 6l12 12" />
                       </svg>
                     </button>
