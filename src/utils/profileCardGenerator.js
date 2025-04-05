@@ -308,16 +308,23 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
     ctx.drawImage(dividerImg, (overlayWidth - dividerWidth) / 2, dividerY1, dividerWidth, dividerHeight);
     ctx.drawImage(dividerImg, (overlayWidth - dividerWidth) / 2, dividerY2, dividerWidth, dividerHeight);
     
-    // 이름 텍스트 그리기
+    // 이름 텍스트 그리기 (이름 강조 Stroke 추가)
     const nameFont = "60px HSBombaram";
     const nameText = userData.name || "이름";
-    ctx.fillStyle = "#FFFFFF";
     ctx.textAlign = "center";
     ctx.font = nameFont;
     
     const nameX = overlayWidth / 2;
     const nameY = (dividerY1 + dividerHeight + dividerY2) / 2 + 10;
-    ctx.fillText(nameText, nameX, nameY);
+    
+    // 텍스트 Stroke 설정 및 그리기
+    ctx.strokeStyle = "#A1A1A1";  // Stroke 색상 설정
+    ctx.lineWidth = 5;            // Stroke 두께 설정
+    ctx.strokeText(nameText, nameX, nameY);  // 테두리 먼저 그리기
+    
+    // 텍스트 내부 채우기
+    ctx.fillStyle = "#FFFFFF";    // 텍스트 색상
+    ctx.fillText(nameText, nameX, nameY);    // 텍스트 채우기
   }
   
   // 텍스트 추가
