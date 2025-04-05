@@ -52,25 +52,28 @@ const UserInputPage = () => {
       return;
     }
     
+    // 중복 제출 방지
+    if (isLoading) return;
+    
     setIsLoading(true);
     
-    // 직업은 userData에 저장
-    setUserData({ job });
+    try {
+      // 직업은 userData에 저장
+      setUserData({ job, name: job }); // name 필드도 추가 (이름 표시용)
 
-    // 사진은 서버에 업로드
-    if (photo) {
-      try {
+      // 사진이 있을 경우에만 배경 제거 API 호출
+      if (photo) {
+        console.log("배경 제거 API 호출"); // 디버깅용
         const response = await photoBackground.uploadPhoto(photo);
         setPhotoData(response.data);
-        navigate("/result");
-      } catch (error) {
-        console.error("사진 업로드 실패:", error);
-        setError(`사진 업로드 중 오류: ${error.message}`);
-        setIsLoading(false);
       }
-    } else {
-      // 사진이 없어도 다음 페이지로 이동
+      
+      // API 호출이 완료된 후에만 페이지 이동
       navigate("/result");
+    } catch (error) {
+      console.error("사진 업로드 실패:", error);
+      setError(`사진 업로드 중 오류: ${error.message}`);
+      setIsLoading(false);
     }
   };
 

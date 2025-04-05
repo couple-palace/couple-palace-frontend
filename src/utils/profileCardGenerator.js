@@ -160,7 +160,7 @@ const renderMarkdownText = (ctx, text, x, y, maxWidth, baseFont) => {
   // 폰트 크기 추출 및 줄 간격 설정 개선
   const fontSizeMatch = baseFont.match(/(\d+)px/);
   const fontSize = fontSizeMatch ? parseInt(fontSizeMatch[1]) : 35; // 기본값 35px
-  const lineHeight = fontSize * 1.8; // 줄 간격을 1.2에서 1.8로 증가
+  const lineHeight = fontSize * 1.4; // 줄 간격 설정
   
   for (const line of lines) {
     let currentX = x;
@@ -278,7 +278,7 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
   textY = renderMarkdownText(tempCtx, profileData.mbti, textX, textY, MAX_TEXT_WIDTH, "35px Maruburi");
   
   // 최종 높이 계산 (마지막 텍스트 위치 + 추가 여백)
-  const CARD_HEIGHT = textY + 100; // 마지막 텍스트 아래 100px 여백 추가
+  const CARD_HEIGHT = textY + 50; // 마지막 텍스트 아래 100px 여백 추가
   
   // 실제 캔버스 생성 및 크기 설정
   const canvas = document.createElement("canvas");
@@ -333,7 +333,7 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
   ctx.fillStyle = "#FFFFFF";
   
   // 닉네임 추가
-  textY = renderMarkdownText(ctx, `**${profileData.nickname}**`, textX, textY, MAX_TEXT_WIDTH, "50px Maruburi");
+  textY = renderMarkdownText(ctx, `**${profileData.nickname}**`, textX, textY, MAX_TEXT_WIDTH, "50px HSBombaram");
   textY += 30;
   
   // 결혼가치관 제목
@@ -350,7 +350,7 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
   // MBTI 제목 및 값
   textY = renderMarkdownText(ctx, "**MBTI**", textX, textY, MAX_TEXT_WIDTH, "50px Maruburi");
   textY += 20;
-  textY = renderMarkdownText(ctx, profileData.mbti, textX, textY, MAX_TEXT_WIDTH, "35px Maruburi");
+  textY = renderMarkdownText(ctx, profileData.mbti, textX, textY, MAX_TEXT_WIDTH, "35px HSBombaram");
   
   // 최종 이미지 반환
   return canvas.toDataURL("image/png");
