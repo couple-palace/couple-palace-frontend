@@ -1,6 +1,16 @@
 {
-    "routes": [
-      { "handle": "filesystem" },
-      { "src": "/.*", "dest": "/index.html" }
-    ]
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "https://server.couplegungjeon.store/api/$1",
+      "headers": {
+        "Access-Control-Allow-Origin": "https://couplegungjeon.store",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        "Access-Control-Allow-Credentials": "true"
+      }
+    },
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "/index.html" }
+  ]
 }
