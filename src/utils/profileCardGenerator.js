@@ -235,11 +235,11 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
   
   // 프로필 이미지 크기 계산
   const profileAspectRatio = profileImg.width / profileImg.height;
-  let profileWidth = overlayWidth * 0.7;
+  let profileWidth = overlayWidth * 0.9;
   let profileHeight = profileWidth / profileAspectRatio;
   
-  if (profileHeight > overlayHeight * 0.9) {
-    profileHeight = overlayHeight * 0.9;
+  if (profileHeight > overlayHeight * 0.99) {
+    profileHeight = overlayHeight * 0.99;
     profileWidth = profileHeight * profileAspectRatio;
   }
   
@@ -278,7 +278,7 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
   textY = renderMarkdownText(tempCtx, profileData.mbti, textX, textY, MAX_TEXT_WIDTH, "35px Maruburi");
   
   // 최종 높이 계산 (마지막 텍스트 위치 + 추가 여백)
-  const CARD_HEIGHT = textY + 50; // 마지막 텍스트 아래 100px 여백 추가
+  const CARD_HEIGHT = textY + 20; // 마지막 텍스트 아래 100px 여백 추가
   
   // 실제 캔버스 생성 및 크기 설정
   const canvas = document.createElement("canvas");
@@ -314,17 +314,27 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
     ctx.textAlign = "center";
     ctx.font = nameFont;
     
+    // 두 divider 사이의 정확한 중앙점 계산
+    const divider1Bottom = dividerY1 + dividerHeight; // 첫 번째 divider 하단
+    const divider2Top = dividerY2; // 두 번째 divider 상단
+    const middleSpace = divider2Top - divider1Bottom; // 두 divider 사이 공간
+    const middlePoint = divider1Bottom + (middleSpace / 2); // 정확한 중앙점
+    
+    // 폰트 베이스라인 보정값 (HSBombaram 폰트의 특성에 맞게 조정)
+    const fontSize = 60;
+    const baselineOffset = fontSize * 0.3; // 폰트 크기의 약 30%
+    
     const nameX = overlayWidth / 2;
-    const nameY = (dividerY1 + dividerHeight + dividerY2) / 2 + 10;
+    const nameY = middlePoint + baselineOffset; // 중간 지점 + 베이스라인 조정
     
     // 텍스트 Stroke 설정 및 그리기
-    ctx.strokeStyle = "#A1A1A1";  // Stroke 색상 설정
-    ctx.lineWidth = 5;            // Stroke 두께 설정
-    ctx.strokeText(nameText, nameX, nameY);  // 테두리 먼저 그리기
+    ctx.strokeStyle = "#A1A1A1";
+    ctx.lineWidth = 5;
+    ctx.strokeText(nameText, nameX, nameY);
     
     // 텍스트 내부 채우기
-    ctx.fillStyle = "#FFFFFF";    // 텍스트 색상
-    ctx.fillText(nameText, nameX, nameY);    // 텍스트 채우기
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillText(nameText, nameX, nameY);
   }
   
   // 텍스트 추가
@@ -348,7 +358,7 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
   textY += 30;
   
   // MBTI 제목 및 값
-  textY = renderMarkdownText(ctx, "**MBTI**", textX, textY, MAX_TEXT_WIDTH, "50px Maruburi");
+  textY = renderMarkdownText(ctx, "**MBTI**", textX, textY, MAX_TEXT_WIDTH, "35px Maruburi");
   textY += 20;
   textY = renderMarkdownText(ctx, profileData.mbti, textX, textY, MAX_TEXT_WIDTH, "35px HSBombaram");
   

@@ -1,32 +1,27 @@
 import axios from "axios";
 
-// 요청 중복 방지를 위한 토큰 보관
-let requestInProgress = false;
-let lastRequestData = null;
-
+// 단순화된 함수로 재작성
 const generateProfile = async (quizData, job) => {
+  // 입력 데이터 검증
+  if (!quizData || !quizData.length) {
+    console.error("퀴즈 데이터가 비어있습니다");
+    throw new Error("EMPTY_QUIZ_DATA");
+  }
+  
+  if (!job) {
+    console.error("직업 정보가 없습니다");
+    throw new Error("EMPTY_JOB");
+  }
+
   const profileData = {
     job,
     questionsList: quizData,
   };
   
-  // 이전과 동일한 요청이거나 이미 요청 중인지 확인
-  const currentRequestData = JSON.stringify(profileData);
-  if (requestInProgress) {
-    console.log("이미 진행 중인 요청이 있습니다.");
-    throw new Error("REQUEST_IN_PROGRESS");
-  }
-  
-  if (lastRequestData === currentRequestData) {
-    console.log("동일한 요청이 감지되었습니다.");
-    throw new Error("DUPLICATE_REQUEST");
-  }
+  console.log("프로필 생성 API 요청 시작", profileData);
   
   try {
-    requestInProgress = true;
-    lastRequestData = currentRequestData;
-    console.log("프로필 생성 API 요청 시작");
-    
+    // API 호출 단순화
     const response = await axios.post(`/api/v1/profile/generate/pf`, profileData, {
       headers: {
         'Content-Type': 'application/json',
@@ -35,16 +30,10 @@ const generateProfile = async (quizData, job) => {
     
     console.log("프로필 생성 API 요청 성공");
     return response;
-  } finally {
-    requestInProgress = false;
+  } catch (error) {
+    console.error("프로필 생성 API 요청 실패:", error);
+    throw error;
   }
 };
 
-// 토큰 초기화 메서드 (테스트용)
-const resetToken = () => {
-  requestInProgress = false;
-  lastRequestData = null;
-};
-
 export default generateProfile;
-export { resetToken };

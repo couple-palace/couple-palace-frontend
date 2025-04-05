@@ -32,8 +32,18 @@ const ResultPage = () => {
       return;
     }
     
-    if (questionsList.length < 1 || !userData?.job) {
-      setError("질문 데이터가 없습니다. 처음부터 다시 시작해주세요.");
+    // 디버그 로그 추가
+    console.log("현재 questionsList:", questionsList);
+    console.log("현재 userData:", userData);
+    
+    if (!questionsList || questionsList.length < 1) {
+      setError("퀴즈 응답 데이터가 없습니다. 처음부터 다시 시작해주세요.");
+      setIsLoading(false);
+      return;
+    }
+    
+    if (!userData || !userData.job) {
+      setError("직업 정보가 없습니다. 처음부터 다시 시작해주세요.");
       setIsLoading(false);
       return;
     }
@@ -41,10 +51,14 @@ const ResultPage = () => {
     try {
       setIsLoading(true);
       profileApiRequestStarted.current = true;
-      console.log("프로필 생성 API 호출 시도");
+      console.log("프로필 생성 API 호출 시도", {
+        questionsList: questionsList,
+        job: userData.job
+      });
       
       // 로컬 스토리지에서 확인
-      const cachedResult = sessionStorage.getItem(`profile-${userData.job}-${questionsList.length}`);
+      const cacheKey = `profile-${userData.job}-${questionsList.length}`;
+      const cachedResult = sessionStorage.getItem(cacheKey);
       if (cachedResult) {
         console.log("캐시된 결과 사용");
         setProfileResult(JSON.parse(cachedResult));
@@ -53,20 +67,24 @@ const ResultPage = () => {
       }
       
       const response = await profileGenerate(questionsList, userData.job);
-      console.log("프로필 생성 API 호출 성공");
+      console.log("프로필 생성 API 호출 성공", response);
       
       // 응답 캐싱
-      sessionStorage.setItem(
-        `profile-${userData.job}-${questionsList.length}`, 
-        JSON.stringify(response.data)
-      );
-      
-      setProfileResult(response.data);
+      if (response && response.data) {
+        sessionStorage.setItem(cacheKey, JSON.stringify(response.data));
+        setProfileResult(response.data);
+      } else {
+        throw new Error("API 응답에 데이터가 없습니다");
+      }
     } catch (error) {
       console.error("프로필 생성 오류:", error);
-      // 중복 요청이나 진행 중인 요청은 에러 표시하지 않음
-      if (error.message !== "DUPLICATE_REQUEST" && error.message !== "REQUEST_IN_PROGRESS") {
-        setError("프로필 생성 중 오류가 발생했습니다.");
+      // 더 구체적인 오류 메시지 표시
+      if (error.message === "EMPTY_QUIZ_DATA") {
+        setError("퀴즈 데이터가 비어있습니다. 처음부터 다시 시작해주세요.");
+      } else if (error.message === "EMPTY_JOB") {
+        setError("직업 정보가 없습니다. 처음부터 다시 시작해주세요.");
+      } else {
+        setError(`프로필 생성 중 오류가 발생했습니다: ${error.message}`);
       }
     } finally {
       setIsLoading(false);

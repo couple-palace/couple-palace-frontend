@@ -11,12 +11,26 @@ const NameInputPage = ({ onNext }) => {
   const inputRef = useRef(null);
   const setStoreName = useUserStore((state) => state.setName);
   const [isAnimating, setIsAnimating] = useState(false);
+  
+  const MAX_NAME_LENGTH = 8; // 이름 최대 길이 상수 정의
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
     if (!name.trim()) {
       // 이름이 비어있을 때 흔들림 애니메이션 적용
+      setIsShaking(true);
+      
+      // 애니메이션 후 상태 초기화
+      setTimeout(() => {
+        setIsShaking(false);
+      }, 600);
+      
+      return;
+    }
+    
+    if (name.length > MAX_NAME_LENGTH) {
+      setErrorMsg(`이름은 최대 ${MAX_NAME_LENGTH}자까지만 입력 가능합니다.`);
       setIsShaking(true);
       
       // 애니메이션 후 상태 초기화
@@ -86,16 +100,19 @@ const NameInputPage = ({ onNext }) => {
               <motion.input
                 ref={inputRef}
                 type="text"
-                placeholder="이름 또는 닉네임을 입력해주세요"
+                placeholder={`이름 또는 닉네임을 입력해주세요(최대 ${MAX_NAME_LENGTH}자)`}
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
-                  if (e.target.value.trim()) {
+                  if (e.target.value.length > MAX_NAME_LENGTH) {
+                    setErrorMsg(`이름은 최대 ${MAX_NAME_LENGTH}자까지만 입력 가능합니다.`);
+                  } else if (e.target.value.trim()) {
                     setErrorMsg("");
                   }
                 }}
                 className={`custom-input ${isShaking ? 'shake' : ''}`}
                 whileFocus={{ scale: 1.01 }}
+                maxLength={MAX_NAME_LENGTH + 5} // 약간의 여유를 두고 입력 제한
               />
               {name && (
                 <motion.span 
@@ -103,7 +120,7 @@ const NameInputPage = ({ onNext }) => {
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
                 >
-                  이름을 다 입력하고 다음 버튼을 눌러주세요
+                 
                 </motion.span>
               )}
             </div>
