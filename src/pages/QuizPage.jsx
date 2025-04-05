@@ -18,11 +18,16 @@ const QuizPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [quizData, setQuizData] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false); // Add state to track submission
   const setAnswer = useQuizStore((state) => state.setAnswer);
+  const resetQuestions = useQuizStore((state) => state.resetQuestions); // resetQuestions 추가
   const navigate = useNavigate();
 
   // quizData 로딩 및 유효성 검사
   useEffect(() => {
+    // 퀴즈 시작 시 questionsList 초기화
+    resetQuestions();
+
     const loadQuizData = async () => {
       try {
         // 정적 import로 불러오기 시도
@@ -59,10 +64,12 @@ const QuizPage = () => {
     };
     
     loadQuizData();
-  }, []);
+  }, [resetQuestions]);
 
   const handleSelect = (optionIndex) => {
-    if (!quizData || !quizData[currentQuestion]) return;
+    if (!quizData || !quizData[currentQuestion] || isSubmitting) return;
+    
+    setIsSubmitting(true); // Prevent multiple rapid submissions
     
     const selectedQuestion = quizData[currentQuestion];
     setAnswer(selectedQuestion.question_idx, optionIndex, selectedQuestion.type);
@@ -75,6 +82,7 @@ const QuizPage = () => {
         // 마지막 질문 후 다음 페이지로 이동
         navigate("/user-input");
       }
+      setIsSubmitting(false); // Re-enable submissions after navigation
     }, 300);
   };
 
@@ -171,4 +179,4 @@ const QuizPage = () => {
   );
 };
 
-export default QuizPage;
+export default QuizPage

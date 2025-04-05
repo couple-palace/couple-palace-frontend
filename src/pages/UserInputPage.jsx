@@ -45,6 +45,7 @@ const UserInputPage = () => {
   };
 
   const handleSubmit = async () => {
+    // 직업 검증
     if (!job.trim()) {
       setError("직업을 입력해주세요");
       setIsShaking(true);
@@ -52,25 +53,34 @@ const UserInputPage = () => {
       return;
     }
     
+    // 사진 필수 검증 추가
+    if (!photo) {
+      setError("프로필 사진을 업로드해주세요");
+      setIsShaking(true);
+      setTimeout(() => setIsShaking(false), 600);
+      return;
+    }
+    
+    // 중복 제출 방지
+    if (isLoading) return;
+    
     setIsLoading(true);
     
-    // 직업은 userData에 저장
-    setUserData({ job });
+    try {
+      // 직업은 userData에 저장
+      setUserData({ job, name: job }); // name 필드도 추가 (이름 표시용)
 
-    // 사진은 서버에 업로드
-    if (photo) {
-      try {
-        const response = await photoBackground.uploadPhoto(photo);
-        setPhotoData(response.data);
-        navigate("/result");
-      } catch (error) {
-        console.error("사진 업로드 실패:", error);
-        setError(`사진 업로드 중 오류: ${error.message}`);
-        setIsLoading(false);
-      }
-    } else {
-      // 사진이 없어도 다음 페이지로 이동
+      // 사진 배경 제거 API 호출 (이제 항상 실행됨)
+      console.log("배경 제거 API 호출"); // 디버깅용
+      const response = await photoBackground.uploadPhoto(photo);
+      setPhotoData(response.data);
+      
+      // API 호출이 완료된 후에만 페이지 이동
       navigate("/result");
+    } catch (error) {
+      console.error("사진 업로드 실패:", error);
+      setError(`사진 업로드 중 오류: ${error.message}`);
+      setIsLoading(false);
     }
   };
 
@@ -103,7 +113,6 @@ const UserInputPage = () => {
           <div className="mb-6">
             <label className="block text-[#F8E9CA] text-sm font-medium mb-2">
               직업 
-              <span className="text-[#FFD700] ml-1">*</span>
             </label>
             <div className="relative">
               <input
@@ -126,10 +135,10 @@ const UserInputPage = () => {
             </div>
           </div>
           
-          {/* 사진 업로드 */}
+          {/* 사진 업로드 - 필수로 변경 */}
           <div>
             <label className="block text-[#F8E9CA] text-sm font-medium mb-2">
-              프로필 사진 (선택사항)
+              프로필 사진
             </label>
             
             <div className="flex flex-col items-center justify-center border-2 border-dashed border-[#F8E9CA]/30 rounded-xl p-4 bg-[#2A1B3D]/30 hover:bg-[#2A1B3D]/50 transition-colors duration-300 cursor-pointer relative overflow-hidden" onClick={() => document.getElementById('photoUpload').click()}>
@@ -142,22 +151,22 @@ const UserInputPage = () => {
               />
               
               {photoPreview ? (
-                <div className="relative w-full">
+                <div className="relative w-full max-w-[160px] mx-auto">
                   <img 
                     src={photoPreview} 
                     alt="미리보기" 
-                    className="w-full h-48 object-cover rounded-lg"
+                    className="w-full h-auto max-h-24 object-contain rounded-lg"
                   />
-                  <div className="absolute top-2 right-2">
+                  <div className="absolute top-1 right-1">
                     <button 
                       onClick={(e) => {
                         e.stopPropagation();
                         setPhoto(null);
                         setPhotoPreview(null);
                       }}
-                      className="bg-[#2A1B3D]/70 hover:bg-[#2A1B3D] p-2 rounded-full"
+                      className="bg-[#2A1B3D]/70 hover:bg-[#2A1B3D] p-1 rounded-full"
                     >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M18 6L6 18M6 6l12 12" />
                       </svg>
                     </button>
