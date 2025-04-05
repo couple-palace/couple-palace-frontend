@@ -68,7 +68,7 @@ const UserInputPage = () => {
     
     try {
       // 직업은 userData에 저장
-      setUserData({ job, name: job }); // name 필드도 추가 (이름 표시용)
+      setUserData({ job});
 
       // 사진 배경 제거 API 호출 (이제 항상 실행됨)
       console.log("배경 제거 API 호출"); // 디버깅용
