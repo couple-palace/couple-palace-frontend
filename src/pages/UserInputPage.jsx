@@ -45,8 +45,17 @@ const UserInputPage = () => {
   };
 
   const handleSubmit = async () => {
+    // 직업 검증
     if (!job.trim()) {
       setError("직업을 입력해주세요");
+      setIsShaking(true);
+      setTimeout(() => setIsShaking(false), 600);
+      return;
+    }
+    
+    // 사진 필수 검증 추가
+    if (!photo) {
+      setError("프로필 사진을 업로드해주세요");
       setIsShaking(true);
       setTimeout(() => setIsShaking(false), 600);
       return;
@@ -61,12 +70,10 @@ const UserInputPage = () => {
       // 직업은 userData에 저장
       setUserData({ job, name: job }); // name 필드도 추가 (이름 표시용)
 
-      // 사진이 있을 경우에만 배경 제거 API 호출
-      if (photo) {
-        console.log("배경 제거 API 호출"); // 디버깅용
-        const response = await photoBackground.uploadPhoto(photo);
-        setPhotoData(response.data);
-      }
+      // 사진 배경 제거 API 호출 (이제 항상 실행됨)
+      console.log("배경 제거 API 호출"); // 디버깅용
+      const response = await photoBackground.uploadPhoto(photo);
+      setPhotoData(response.data);
       
       // API 호출이 완료된 후에만 페이지 이동
       navigate("/result");
@@ -106,7 +113,6 @@ const UserInputPage = () => {
           <div className="mb-6">
             <label className="block text-[#F8E9CA] text-sm font-medium mb-2">
               직업 
-              <span className="text-[#FFD700] ml-1">*</span>
             </label>
             <div className="relative">
               <input
@@ -129,10 +135,10 @@ const UserInputPage = () => {
             </div>
           </div>
           
-          {/* 사진 업로드 */}
+          {/* 사진 업로드 - 필수로 변경 */}
           <div>
             <label className="block text-[#F8E9CA] text-sm font-medium mb-2">
-              프로필 사진 (선택사항)
+              프로필 사진
             </label>
             
             <div className="flex flex-col items-center justify-center border-2 border-dashed border-[#F8E9CA]/30 rounded-xl p-4 bg-[#2A1B3D]/30 hover:bg-[#2A1B3D]/50 transition-colors duration-300 cursor-pointer relative overflow-hidden" onClick={() => document.getElementById('photoUpload').click()}>
