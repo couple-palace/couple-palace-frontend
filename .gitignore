@@ -9,20 +9,26 @@ lerna-debug.log*
 
 # Dependencies
 node_modules
-+ .pnp
-+ .pnp.js
+.pnp
+.pnp.js
+
+# Testing
+coverage
 
 # Production build
 dist
 dist-ssr
+.build
 *.local
 
 # Environment variables
-+ .env
-+ .env.local
-+ .env.development.local
-+ .env.test.local
-+ .env.production.local
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test.local
+.env.production
+.env.production.local
 
 # Editor directories and files
 .vscode/*
@@ -37,10 +43,10 @@ dist-ssr
 
 # Vercel
 .vercel
-+ .vercel/cache
-+ .vercel/output
+.vercel/cache
+.vercel/output
 
 # System files
-+ Thumbs.db
-+ .DS_Store
-+ *.bak
+Thumbs.db
+.DS_Store
+*.bak
