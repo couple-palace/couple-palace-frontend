@@ -44,6 +44,7 @@ const NameInputPage = ({ onNext }) => {
     // 유효한 입력이 있는 경우
     setIsAnimating(true);
     setStoreName(name); // Zustand에 이름 저장
+    console.log("userData 업데이트:", { name }); // 이름 저장 로그 추가
     
     // 애니메이션 효과 후 다음 페이지로
     setTimeout(() => {
