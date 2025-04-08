@@ -8,13 +8,16 @@ const QuizQuestion = ({ quiz, onSelect }) => {
       </h2>
       <div className="w-full flex flex-col gap-3">
         {quiz.answer.map((option, index) => (
-          <button
+          <div
             key={index}
-            className="w-full py-3 px-4 bg-gray-100 rounded-lg hover:bg-blue-500 hover:text-white transition"
+            className="quiz-option w-full py-3 px-4 bg-gray-100 rounded-lg hover:text-white transition cursor-pointer text-center hover:transform hover:scale-[1.02] active:transform active:scale-[1.05]"
             onClick={() => onSelect(index)}
+            role="button"
+            spellCheck="false"
+            aria-label={`선택지: ${option}`}
           >
             {option}
-          </button>
+          </div>
         ))}
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import useQuizStore from "../store/quizStore";
 import { useNavigate } from "react-router-dom";
 
@@ -19,9 +19,42 @@ const QuizPage = () => {
   const [hasError, setHasError] = useState(false);
   const [quizData, setQuizData] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false); // Add state to track submission
+  const [selectedOption, setSelectedOption] = useState(null); // Add state to track selected option
   const setAnswer = useQuizStore((state) => state.setAnswer);
   const resetQuestions = useQuizStore((state) => state.resetQuestions); // resetQuestions 추가
   const navigate = useNavigate();
+  const activeButtonRef = useRef(null);
+
+  // 터치 이벤트로 포커스 해제 처리를 위한 핸들러
+  const handleTouchStart = (e) => {
+    // 터치 이벤트 대상을 저장
+    activeButtonRef.current = e.currentTarget;
+  };
+  
+  const handleTouchEnd = (e) => {
+    // 터치가 끝나면 모든 포커스 제거
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+    
+    // 특정 엘리먼트 포커스 해제
+    if (activeButtonRef.current) {
+      activeButtonRef.current.blur();
+    }
+    
+    // iOS Safari에서 특히 효과적
+    setTimeout(() => {
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+    }, 100);
+  };
+
+  // 포커스 완전 방지를 위한 핸들러
+  const preventFocus = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
 
   // quizData 로딩 및 유효성 검사
   useEffect(() => {
@@ -66,16 +99,43 @@ const QuizPage = () => {
     loadQuizData();
   }, [resetQuestions]);
 
+  // Reset selected option whenever the question changes
+  useEffect(() => {
+    setSelectedOption(null);
+    // Clear any active focus when question changes
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+    
+    // 추가: iOS Safari와 일부 Android 브라우저를 위한 지연 blur 처리
+    setTimeout(() => {
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+    }, 100);
+  }, [currentQuestion]);
+
   const handleSelect = (optionIndex) => {
     if (!quizData || !quizData[currentQuestion] || isSubmitting) return;
     
     setIsSubmitting(true); // Prevent multiple rapid submissions
+    setSelectedOption(optionIndex); // Set the selected option
     
     const selectedQuestion = quizData[currentQuestion];
     setAnswer(selectedQuestion.question_idx, optionIndex, selectedQuestion.type);
     
     // 선택 효과를 위한 짧은 지연
     setTimeout(() => {
+      // Remove focus from the button before navigating
+      if (activeButtonRef.current && activeButtonRef.current instanceof HTMLElement) {
+        activeButtonRef.current.blur();
+      }
+      
+      // 모든 활성 엘리먼트의 포커스 제거 (더 강력한 처리)
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+      
       if (currentQuestion + 1 < quizData.length) {
         setCurrentQuestion(currentQuestion + 1);
       } else {
@@ -121,7 +181,7 @@ const QuizPage = () => {
   // 로딩 화면
   if (isLoading || !quizData) {
     return (
-      <div className="w-full min-h-screen flex flex-col items-center justify-center px-6 py-8 bg-gradient-to-b from-[#2a1b3d] to-[#1a0b2e] text-white">
+      <div className="w-full min-h-screen flex flex-col items-center justify-center px-6 py-8  text-white">
         <div className="w-16 h-16 border-4 border-[#F8E9CA]/30 border-t-[#F8E9CA] rounded-full animate-spin mb-4"></div>
         <p className="text-[#F8E9CA]">퀴즈를 불러오는 중...</p>
       </div>
@@ -163,13 +223,18 @@ const QuizPage = () => {
           {/* 선택지 컨테이너 */}
           <div className="flex flex-col min-h-[280px]">
             {options.map((option, idx) => (
-              <button
-                key={idx}
+              <div
+                key={`q${currentQuestion}-opt${idx}`}
                 onClick={() => handleSelect(idx)}
-                className="quiz-option p-5 bg-[#2A1B3D]/70 hover:bg-[#3D2A50] border border-[#F8E9CA]/20 rounded-xl transition-all duration-200 hover:transform hover:scale-[1.02]"
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+                role="button"
+                aria-label={`선택지: ${option}`}
+                spellCheck="false"
+                className="quiz-option p-5 bg-[#2A1B3D]/70 hover:bg-[#3D2A50] rounded-xl transition-all duration-200 hover:transform hover:scale-[1.02] active:transform active:scale-[1.05] hover:border-[#F8E9CA]/40 cursor-pointer"
               >
                 {option}
-              </button>
+              </div>
             ))}
           </div>
         </div>
