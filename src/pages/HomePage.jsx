@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import profileSample from "@assets/profile_sample.png"; // 이미지 import
+import profileSample from "@assets/profile_sample01.png"; // 이미지 import
 
 const HomePage = () => {
   const navigate = useNavigate();
