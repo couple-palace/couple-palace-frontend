@@ -93,8 +93,6 @@ button {
 button:hover {
   border-color: #646cff;
 }
-button:focus,
-
 
 .quiz-option {
   margin-bottom: 1rem; /* Add spacing between buttons */
