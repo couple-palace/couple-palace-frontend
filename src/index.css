@@ -153,6 +153,14 @@ input:focus {
   background-color: rgba(42, 27, 61, 0.7) !important;
 }
 
+/* 퀴즈 옵션 클릭 효과 */
+.quiz-option:active {
+  transform: scale(1.05);
+  background-color: #3D2A50 !important;
+  border-color: rgba(248, 233, 202, 0.5) !important;
+  transition: transform 0.1s ease-in-out;
+}
+
 /* Custom input styling - fixed size with no transitions on width */
 .custom-input {
   width: 100%; /* Full width of container */
@@ -293,6 +301,12 @@ button,
 
 /* 모바일 특화 포커스 방지 스타일 */
 @media (hover: none) {
+  .quiz-option:active {
+    transform: scale(1.05);
+    background-color: #3D2A50;
+  }
+  
+  /* 이미 존재하는 미디어 쿼리 내용 유지 */
   .quiz-option, button {
     -webkit-tap-highlight-color: transparent !important;
     -webkit-focus-ring-color: transparent !important;
@@ -301,4 +315,38 @@ button,
     user-select: none;
     outline: none !important;
   }
+}
+
+/* 클릭 효과를 위한 div 스타일 */
+div[role="button"] {
+  user-select: none;
+  cursor: pointer;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* iOS 터치 하이라이트 효과 제거를 위한 추가 CSS - 수정 */
+* {
+  -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+}
+
+/* 퀴즈 옵션 추가 스타일 - 텍스트 선택 및 철자 검사 비활성화 */
+div[role="button"].quiz-option {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  touch-action: manipulation;
+  -webkit-touch-callout: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  
+  /* 철자 검사 비활성화 */
+  -webkit-spell-check: none !important;
+  -ms-spell-check: none !important;
+  spellcheck: false !important;
 }

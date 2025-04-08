@@ -223,17 +223,18 @@ const QuizPage = () => {
           {/* 선택지 컨테이너 */}
           <div className="flex flex-col min-h-[280px]">
             {options.map((option, idx) => (
-              <button
+              <div
                 key={`q${currentQuestion}-opt${idx}`}
                 onClick={() => handleSelect(idx)}
                 onTouchStart={handleTouchStart}
                 onTouchEnd={handleTouchEnd}
-                onMouseDown={preventFocus} 
-                tabIndex="-1"
-                className="quiz-option p-5 bg-[#2A1B3D]/70 hover:bg-[#3D2A50] border rounded-xl transition-all duration-200 hover:transform hover:scale-[1.02] hover:border-[#F8E9CA]/40"
+                role="button"
+                aria-label={`선택지: ${option}`}
+                spellCheck="false"
+                className="quiz-option p-5 bg-[#2A1B3D]/70 hover:bg-[#3D2A50] rounded-xl transition-all duration-200 hover:transform hover:scale-[1.02] active:transform active:scale-[1.05] hover:border-[#F8E9CA]/40 cursor-pointer"
               >
                 {option}
-              </button>
+              </div>
             ))}
           </div>
         </div>

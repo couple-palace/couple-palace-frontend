@@ -1,11 +1,6 @@
 import React from "react";
 
 const QuizQuestion = ({ quiz, onSelect }) => {
-  // 포커스 방지 핸들러
-  const preventFocus = (e) => {
-    e.preventDefault();
-  };
-  
   return (
     <div className="w-full flex flex-col items-center">
       <h2 className="text-xl font-semibold mb-4">
@@ -13,15 +8,16 @@ const QuizQuestion = ({ quiz, onSelect }) => {
       </h2>
       <div className="w-full flex flex-col gap-3">
         {quiz.answer.map((option, index) => (
-          <button
+          <div
             key={index}
-            className="quiz-option w-full py-3 px-4 bg-gray-100 rounded-lg hover:text-white transition"
+            className="quiz-option w-full py-3 px-4 bg-gray-100 rounded-lg hover:text-white transition cursor-pointer text-center hover:transform hover:scale-[1.02] active:transform active:scale-[1.05]"
             onClick={() => onSelect(index)}
-            onMouseDown={preventFocus}
-            tabIndex="-1"
+            role="button"
+            spellCheck="false"
+            aria-label={`선택지: ${option}`}
           >
             {option}
-          </button>
+          </div>
         ))}
       </div>
     </div>
