@@ -93,6 +93,17 @@ button {
 button:hover {
   border-color: #646cff;
 }
+button:focus,
+button:focus-visible,
+input:focus {
+  outline: none !important;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+}
+
+.quiz-option:focus {
+  outline: none !important;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+}
 
 .quiz-option {
   margin-bottom: 1rem; /* Add spacing between buttons */
@@ -103,10 +114,43 @@ button:hover {
   margin-left: auto; /* Center the button horizontally */
   margin-right: auto; /* Center the button horizontally */
   box-sizing: border-box; /* Ensure padding doesn't affect width */
+  
+  /* 포커스 방지 강화 */
+  outline: 0 !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-focus-ring-color: transparent !important;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: auto;
+}
+
+/* 모든 상태에서 포커스 스타일 제거 */
+.quiz-option:focus,
+.quiz-option:active, 
+.quiz-option:hover,
+.quiz-option:visited {
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-focus-ring-color: transparent !important;
 }
 
 .quiz-option:last-child {
   margin-bottom: 0; /* Remove margin for the last button */
+}
+
+/* Add a specific class for selected options during transition */
+.quiz-option-selected {
+  background-color: #3D2A50 !important;
+  border-color: rgba(248, 233, 202, 0.4) !important;
+}
+
+/* Reset focus state explicitly */
+.quiz-option-reset:focus {
+  outline: none !important;
+  border-color: rgba(248, 233, 202, 0.2) !important;
+  background-color: rgba(42, 27, 61, 0.7) !important;
 }
 
 /* Custom input styling - fixed size with no transitions on width */
@@ -125,7 +169,7 @@ button:hover {
 }
 
 .custom-input:focus {
-  border-color: rgb(248, 233, 202);
+  border-color: rgba(0, 0, 0, 0);
   background-color: rgb(45, 31, 66);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
@@ -207,7 +251,54 @@ input[type="password"] {
 .shake {
   animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both;
 }
-/* 
-.hidden{
-  visibility: hidden;
-} */
+
+/* 모바일 터치 하이라이트 및 포커스 링 제거 */
+* {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-focus-ring-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  outline: none !important;
+  user-select: none;
+}
+
+/* 모바일용 버튼 스타일 강화 */
+button, 
+.quiz-option {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-focus-ring-color: transparent !important;
+  outline: none !important;
+  touch-action: manipulation;
+}
+
+/* 특별히 iOS Safari를 위한 설정 */
+input, 
+button, 
+.quiz-option {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* 추가: 파란색 포커스 상태 방지를 위한 전역 스타일 */
+*:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* 모바일 터치 하이라이트 및 포커스 링 제거 */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* 일부 안드로이드 브라우저를 위한 설정 */
+  -webkit-focus-ring-color: transparent; /* 일부 최신 버전의 크롬을 위한 설정 */
+}
+
+/* 모바일 특화 포커스 방지 스타일 */
+@media (hover: none) {
+  .quiz-option, button {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-focus-ring-color: transparent !important;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    outline: none !important;
+  }
+}
