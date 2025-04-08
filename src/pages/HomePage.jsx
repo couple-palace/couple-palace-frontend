@@ -7,7 +7,7 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-[#2a1b3d] to-[#1a0b2e] text-center p-6">
+    <div className="flex flex-col items-center min-h-screen  text-center p-6">
       {/* 타이틀 영역 */}
       <motion.div 
         className="w-custom max-w-custom mx-auto mt-12 mb-10 px-4"
@@ -15,15 +15,21 @@ const HomePage = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
       >
-        <h1 className="text-3xl mb-4 bg-gradient-to-r from-[#F8E9CA] to-[#FFD700] text-transparent bg-clip-text" style={{ fontFamily: "'HSBombaram', sans-serif" }}>
-          커플 궁전 프로필 테스트
-        </h1>
-        <p className="text-lg mb-3 text-[#F8E9CA]/90">
-          연애, 결혼 가치관을 분석하고 커플궁전에 나가보세요!
-        </p>
-        <p className="text-sm mb-8 text-[#F8E9CA]/70">
-          재미있는 퀴즈로 당신만의 개성이 담긴 커플 궁전 프로필을 만들어 드려요
-        </p>
+        <div className="text-3xl mb-4 bg-gradient-to-r from-[#F8E9CA] to-[#FFD700] text-transparent bg-clip-text" style={{ fontFamily: "'HSBombaram', sans-serif" }}>
+          <div>커플궁전 </div>
+          <div>프로필 테스트</div> 
+        </div>
+        <div className="flex flex-col">
+          <div className="text-lg mb-3 flex flex-wrap justify-center text-[#F8E9CA]/90">
+            <div>연애, 결혼 가치관을 분석하고 </div>
+            <div>커플궁전에 나가보세요!</div>
+          </div>
+          <div className="text-sm mb-8 flex flex-wrap justify-center text-[#F8E9CA]/70">
+            <div>재미있는 퀴즈로 당신만의 개성이 담긴 </div>
+            <div>커플궁전 프로필을 만들어 드려요</div>
+          </div>
+        </div>
+   
       </motion.div>
 
       {/* 프로필 결과 예시 */}
@@ -33,11 +39,11 @@ const HomePage = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.7, delay: 0.2 }}
       >
-        <div className="bg-[#F8E9CA]/10 rounded-xl p-6 backdrop-blur-sm shadow-lg border border-[#F8E9CA]/20">
+        <div className="bg-[#F8E9CA]/10 p-6 backdrop-blur-sm shadow-lg border border-[#F8E9CA]/20">
           <img
             src={profileSample}
             alt="Profile Example"
-            className="rounded-lg mb-4 shadow-md hover:shadow-xl transition-all duration-300"
+            className=" mb-4 shadow-md hover:shadow-xl transition-all duration-300"
             style={{ width: "90%", margin: "0 auto" }}
           />
           <p className="text-center text-sm text-[#F8E9CA]/80">프로필 결과 예시</p>
