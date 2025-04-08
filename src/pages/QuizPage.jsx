@@ -19,6 +19,7 @@ const QuizPage = () => {
   const [hasError, setHasError] = useState(false);
   const [quizData, setQuizData] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false); // Add state to track submission
+  const [selectedOption, setSelectedOption] = useState(null); // Add state to track selected option
   const setAnswer = useQuizStore((state) => state.setAnswer);
   const resetQuestions = useQuizStore((state) => state.resetQuestions); // resetQuestions 추가
   const navigate = useNavigate();
@@ -66,10 +67,16 @@ const QuizPage = () => {
     loadQuizData();
   }, [resetQuestions]);
 
+  // Reset selected option whenever the question changes
+  useEffect(() => {
+    setSelectedOption(null);
+  }, [currentQuestion]);
+
   const handleSelect = (optionIndex) => {
     if (!quizData || !quizData[currentQuestion] || isSubmitting) return;
     
     setIsSubmitting(true); // Prevent multiple rapid submissions
+    setSelectedOption(optionIndex); // Set the selected option
     
     const selectedQuestion = quizData[currentQuestion];
     setAnswer(selectedQuestion.question_idx, optionIndex, selectedQuestion.type);
@@ -166,7 +173,7 @@ const QuizPage = () => {
               <button
                 key={idx}
                 onClick={() => handleSelect(idx)}
-                className="quiz-option p-5 bg-[#2A1B3D]/70 hover:bg-[#3D2A50] border border-[#F8E9CA]/20 rounded-xl transition-all duration-200 hover:transform hover:scale-[1.02]"
+                className="quiz-option p-5 bg-[#2A1B3D]/70 hover:bg-[#3D2A50] border border-[#F8E9CA]/20 rounded-xl transition-all duration-200 hover:transform hover:scale-[1.02] hover:border-[#F8E9CA]/40"
               >
                 {option}
               </button>
