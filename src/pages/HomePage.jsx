@@ -10,7 +10,7 @@ const HomePage = () => {
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-[#2a1b3d] to-[#1a0b2e] text-center p-6">
       {/* 타이틀 영역 */}
       <motion.div 
-        className="mt-12 mb-10 px-4"
+        className="w-custom max-w-custom mx-auto mt-12 mb-10 px-4"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
@@ -28,7 +28,7 @@ const HomePage = () => {
 
       {/* 프로필 결과 예시 */}
       <motion.div 
-        className="w-full max-w-sm mb-10"
+        className="w-custom max-w-custom mx-auto mb-10"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.7, delay: 0.2 }}
@@ -47,7 +47,7 @@ const HomePage = () => {
       {/* 퀴즈 시작 버튼 */}
       <motion.button
         onClick={() => navigate("/name-input")}
-        className="bg-gradient-to-r from-[#F8E9CA] to-[#FFD700] text-[#1F2937] px-8 py-4 w-full max-w-sm rounded-2xl text-lg font-bold shadow-lg shadow-[#F8E9CA]/20 hover:shadow-xl hover:shadow-[#F8E9CA]/30"
+        className="w-custom max-w-custom mx-auto bg-gradient-to-r from-[#F8E9CA] to-[#FFD700] text-[#1F2937] px-8 py-4 rounded-2xl text-lg font-bold shadow-lg shadow-[#F8E9CA]/20 hover:shadow-xl hover:shadow-[#F8E9CA]/30"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.98 }}
         initial={{ opacity: 0, y: 20 }}

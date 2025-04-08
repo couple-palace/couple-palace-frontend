@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 @font-face {
     font-family: 'MaruBuri';
@@ -102,13 +100,13 @@ button:focus-visible {
 
 .quiz-option {
   margin-bottom: 1rem; /* Add spacing between buttons */
-  width: 90%; /* Set button width to 90% of the screen */
-  max-width: 500px; /* Optional: Limit the maximum width */
+  width: 100% !important; /* Force full width */
   display: flex; /* Use flexbox for alignment */
   justify-content: center; /* Center text horizontally */
   align-items: center; /* Center text vertically */
   margin-left: auto; /* Center the button horizontally */
   margin-right: auto; /* Center the button horizontally */
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
 }
 
 .quiz-option:last-child {
@@ -213,3 +211,7 @@ input[type="password"] {
 .shake {
   animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both;
 }
+/* 
+.hidden{
+  visibility: hidden;
+} */

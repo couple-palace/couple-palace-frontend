@@ -131,7 +131,7 @@ const QuizPage = () => {
   return (
     <div className="w-full min-h-screen flex flex-col items-center px-6 py-8 bg-gradient-to-b from-[#2a1b3d] to-[#1a0b2e] text-white">
       {/* 상단 진행 상태 */}
-      <div className="w-full max-w-md mb-8">
+      <div className="w-custom max-w-custom mx-auto mb-8">
         {/* Progress bar */}
         <div style={{
           width: '100%',
@@ -154,20 +154,20 @@ const QuizPage = () => {
       </div>
 
       {/* 질문 전환 */}
-      <div className="w-full max-w-md flex-grow flex flex-col justify-center">
-        <div className="bg-[#1C2333]/70 p-6 rounded-2xl shadow-lg border border-[#F8E9CA]/10 backdrop-blur-sm">
-          <div className="mb-8">
+      <div className="w-custom max-w-custom mx-auto flex-grow flex flex-col justify-center">
+        <div className="w-full bg-[#1C2333]/70 p-6 rounded-2xl shadow-lg border border-[#F8E9CA]/10 backdrop-blur-sm">
+          <div className="mb-8 w-full">
             <p className="text-xs text-[#F8E9CA]/60 mb-2">질문 {currentQuestion + 1}</p>
-            <h3 className="text-xl font-medium text-[#F8E9CA]">{questionText}</h3>
+            <h3 className="text-xl font-medium text-[#F8E9CA] w-full break-words">{questionText}</h3>
           </div>
 
           {/* 선택지 컨테이너 */}
-          <div className="flex flex-col min-h-[280px]">
+          <div className="flex flex-col min-h-[280px] w-full">
             {options.map((option, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSelect(idx)}
-                className="quiz-option p-5 bg-[#2A1B3D]/70 hover:bg-[#3D2A50] border border-[#F8E9CA]/20 rounded-xl transition-all duration-200 hover:transform hover:scale-[1.02]"
+                className="quiz-option p-5 bg-[#2A1B3D]/70 hover:bg-[#3D2A50] border border-[#F8E9CA]/20 rounded-xl transition-all duration-200 hover:transform hover:scale-[1.02] w-full break-words"
               >
                 {option}
               </button>
@@ -179,4 +179,4 @@ const QuizPage = () => {
   );
 };
 
-export default QuizPage
+export default QuizPage;

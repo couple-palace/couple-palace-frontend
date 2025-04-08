@@ -62,7 +62,7 @@ const NameInputPage = ({ onNext }) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
     >
-      <div className="w-full max-w-md">
+      <div className="w-custom max-w-custom mx-auto">
         {/* 제목 및 설명 */}
         <motion.div 
           className="text-center mb-10"
@@ -155,7 +155,7 @@ const NameInputPage = ({ onNext }) => {
       </div>
 
       <motion.div 
-        className="fixed bottom-5 w-full text-center text-xs text-[#F8E9CA]/50"
+        className="fixed bottom-5 w-custom max-w-custom mx-auto text-center text-xs text-[#F8E9CA]/50"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8, duration: 1 }}
