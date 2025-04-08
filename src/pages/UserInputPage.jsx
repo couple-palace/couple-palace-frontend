@@ -86,7 +86,7 @@ const UserInputPage = () => {
 
   return (
     <motion.div 
-      className="min-h-screen w-full flex flex-col items-center p-6 bg-gradient-to-b from-[#2a1b3d] to-[#1a0b2e] text-white"
+      className="min-h-screen w-full flex flex-col items-center p-6 text-white"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
@@ -97,7 +97,7 @@ const UserInputPage = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-3xl font-bold mb-2 text-center bg-gradient-to-r from-[#F8E9CA] to-[#FFD700] text-transparent bg-clip-text">
+        <h1 className="text-lg font-bold mb-2 text-center bg-gradient-to-r from-[#F8E9CA] to-[#FFD700] text-transparent bg-clip-text" style={{ fontFamily: "'HSBombaram', sans-serif" }}>
           프로필 정보
         </h1>
         <p className="text-center text-[#F8E9CA]/70 mb-8">거의 다 왔어요! 마지막 단계입니다</p>
@@ -151,21 +151,21 @@ const UserInputPage = () => {
               
               {photoPreview ? (
                 <div className="relative w-full max-w-[160px] mx-auto">
-                  <img 
-                    src={photoPreview} 
-                    alt="미리보기" 
-                    className="w-full h-auto max-h-24 object-contain rounded-lg"
-                  />
-                  <div className="absolute top-1 right-1">
+                  <div className="relative">
+                    <img 
+                      src={photoPreview} 
+                      alt="미리보기" 
+                      className="w-full h-auto max-h-24 object-contain rounded-lg"
+                    />
                     <button 
                       onClick={(e) => {
                         e.stopPropagation();
                         setPhoto(null);
                         setPhotoPreview(null);
                       }}
-                      className="bg-[#2A1B3D]/70 hover:bg-[#2A1B3D] p-1 rounded-full"
+                      className="absolute top-0 right-0 transform -translate-y-1/3 translate-x-1/3 bg-[#2A1B3D]/80 hover:bg-[#2A1B3D] p-1 rounded-full shadow-md border border-[#F8E9CA]/30"
                     >
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M18 6L6 18M6 6l12 12" />
                       </svg>
                     </button>

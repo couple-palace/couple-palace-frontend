@@ -57,7 +57,7 @@ const NameInputPage = ({ onNext }) => {
 
   return (
     <motion.div 
-      className="flex flex-col items-center justify-center min-h-screen px-6 bg-gradient-to-b from-[#2a1b3d] to-[#1a0b2e] text-white"
+      className="flex flex-col items-center justify-center min-h-screen px-6 text-white"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
@@ -100,7 +100,7 @@ const NameInputPage = ({ onNext }) => {
               <motion.input
                 ref={inputRef}
                 type="text"
-                placeholder={`이름 또는 닉네임을 입력해주세요(최대 ${MAX_NAME_LENGTH}자)`}
+                placeholder={`이름을 입력해주세요(최대 ${MAX_NAME_LENGTH}자)`}
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
@@ -155,7 +155,7 @@ const NameInputPage = ({ onNext }) => {
       </div>
 
       <motion.div 
-        className="fixed bottom-5 w-custom max-w-custom mx-auto text-center text-xs text-[#F8E9CA]/50"
+        className="fixed bottom-10 w-custom max-w-custom mx-auto text-center text-xs text-[#F8E9CA]/50"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8, duration: 1 }}

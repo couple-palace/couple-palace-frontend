@@ -103,7 +103,7 @@ const QuizPage = () => {
   // 에러 화면
   if (hasError) {
     return (
-      <div className="w-full min-h-screen flex flex-col items-center justify-center px-6 py-8 bg-gradient-to-b from-[#2a1b3d] to-[#1a0b2e] text-white">
+      <div className="w-full min-h-screen flex flex-col items-center justify-center px-6 py-8 text-white">
         <div className="p-6 bg-[#1C2333]/70 backdrop-blur-sm border border-red-500/40 rounded-xl text-center max-w-md">
           <h2 className="text-xl font-medium text-[#F8E9CA] mb-4">퀴즈를 불러오는데 문제가 발생했습니다</h2>
           <p className="text-[#F8E9CA]/70 mb-6">잠시 후 다시 시도해주세요</p>
@@ -129,9 +129,12 @@ const QuizPage = () => {
   }
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center px-6 py-8 bg-gradient-to-b from-[#2a1b3d] to-[#1a0b2e] text-white">
-      {/* 상단 진행 상태 */}
-      <div className="w-custom max-w-custom mx-auto mb-8">
+    
+    <div className="w-full min-h-screen flex flex-col items-center justify-center  text-white">
+      {/* 질문 전환 */}
+      <div className="bg-[#1C2333]/70 p-6 rounded-2xl shadow-lg border border-[#F8E9CA]/10 backdrop-blur-sm">
+        <div className="w-full max-w-md flex-grow flex flex-col justify-center">
+      <div className="w-full max-w-md mb-8">
         {/* Progress bar */}
         <div style={{
           width: '100%',
@@ -152,22 +155,18 @@ const QuizPage = () => {
         </div>
         
       </div>
-
-      {/* 질문 전환 */}
-      <div className="w-custom max-w-custom mx-auto flex-grow flex flex-col justify-center">
-        <div className="w-full bg-[#1C2333]/70 p-6 rounded-2xl shadow-lg border border-[#F8E9CA]/10 backdrop-blur-sm">
-          <div className="mb-8 w-full">
+          <div className="mb-8">
             <p className="text-xs text-[#F8E9CA]/60 mb-2">질문 {currentQuestion + 1}</p>
-            <h3 className="text-xl font-medium text-[#F8E9CA] w-full break-words">{questionText}</h3>
+            <h3 className="text-xl font-medium text-[#F8E9CA]">{questionText}</h3>
           </div>
 
           {/* 선택지 컨테이너 */}
-          <div className="flex flex-col min-h-[280px] w-full">
+          <div className="flex flex-col min-h-[280px]">
             {options.map((option, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSelect(idx)}
-                className="quiz-option p-5 bg-[#2A1B3D]/70 hover:bg-[#3D2A50] border border-[#F8E9CA]/20 rounded-xl transition-all duration-200 hover:transform hover:scale-[1.02] w-full break-words"
+                className="quiz-option p-5 bg-[#2A1B3D]/70 hover:bg-[#3D2A50] border border-[#F8E9CA]/20 rounded-xl transition-all duration-200 hover:transform hover:scale-[1.02]"
               >
                 {option}
               </button>
