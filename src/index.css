@@ -310,10 +310,36 @@ button,
   .quiz-option, button {
     -webkit-tap-highlight-color: transparent !important;
     -webkit-focus-ring-color: transparent !important;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
     user-select: none;
     outline: none !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    background-color: inherit !important; /* 상속된 배경색 유지 */
+  }
+  
+  /* 사진 삭제 버튼 특화 스타일 - 모바일에서 배경색 유지 */
+  .photo-delete-button {
+    background-color: rgba(42, 27, 61, 0.8) !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    border: 1px solid rgba(248, 233, 202, 0.3) !important;
+  }
+  
+  .photo-delete-button:active {
+    background-color: rgb(42, 27, 61) !important;
+  }
+  
+  /* 네비게이션 버튼 특화 스타일 - 모바일에서 배경색 유지 */
+  .nav-button {
+    background-color: rgba(55, 65, 81, 0.5) !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+  }
+  
+  .nav-button:active {
+    background-color: rgba(55, 65, 81, 0.7) !important;
   }
 }
 
