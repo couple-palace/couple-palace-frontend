@@ -100,7 +100,7 @@ const NameInputPage = ({ onNext }) => {
               <motion.input
                 ref={inputRef}
                 type="text"
-                placeholder={`이름 또는 닉네임을 입력해주세요(최대 ${MAX_NAME_LENGTH}자)`}
+                placeholder={`이름을 입력해주세요(최대 ${MAX_NAME_LENGTH}자)`}
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
