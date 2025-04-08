@@ -7,7 +7,7 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center min-h-screen  text-center p-6">
+    <div className="flex flex-col items-center min-h-screen border rounded-lg border-[#F8E9CA]/30 text-center p-6">
       {/* 타이틀 영역 */}
       <motion.div 
         className="w-custom max-w-custom mx-auto mt-12 mb-10 px-4"

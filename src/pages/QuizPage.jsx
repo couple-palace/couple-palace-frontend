@@ -129,6 +129,7 @@ const QuizPage = () => {
   }
 
   return (
+    
     <div className="w-full min-h-screen flex flex-col items-center justify-center  text-white">
       {/* 질문 전환 */}
       <div className="bg-[#1C2333]/70 p-6 rounded-2xl shadow-lg border border-[#F8E9CA]/10 backdrop-blur-sm">
@@ -177,4 +178,4 @@ const QuizPage = () => {
   );
 };
 
-export default QuizPage
+export default QuizPage;
