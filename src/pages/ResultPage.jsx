@@ -159,7 +159,7 @@ const ResultPage = () => {
       transition={{ duration: 0.8 }}
     >
       {error && (
-        <div className="p-4 bg-red-500 text-white rounded-lg mt-6 max-w-sm">
+        <div className="p-4 bg-red-500 text-white rounded-lg mt-6 w-custom max-w-custom mx-auto">
           {error}
           <button
             className="mt-3 px-4 py-2 bg-white text-red-500 rounded-lg text-sm"
@@ -171,7 +171,7 @@ const ResultPage = () => {
       )}
 
       {isLoading && !error && (
-        <div className="flex flex-col items-center justify-center h-[70vh]">
+        <div className="flex flex-col items-center justify-center h-[70vh] w-custom max-w-custom mx-auto">
           <div className="w-12 h-12 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
           <p className="mt-4 text-white text-base">결과를 생성 중입니다...</p>
         </div>
@@ -179,7 +179,7 @@ const ResultPage = () => {
 
       {!isLoading && !error && profileCardImage && (
         <motion.div
-          className="flex flex-col items-center w-full max-w-md px-4 mt-8"
+          className="flex flex-col items-center w-custom max-w-custom mx-auto px-4 mt-8"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -193,7 +193,7 @@ const ResultPage = () => {
             <img
               src={profileCardImage}
               alt="프로필 카드"
-              className="w-full max-w-[1024px] rounded-lg shadow-lg"
+              className="w-full rounded-lg shadow-lg"
             />
           </div>
 

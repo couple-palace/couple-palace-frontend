@@ -92,7 +92,7 @@ const UserInputPage = () => {
       transition={{ duration: 0.6 }}
     >
       <motion.div 
-        className="w-full max-w-md mt-8"
+        className="w-custom max-w-custom mx-auto mt-8"
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -129,7 +129,6 @@ const UserInputPage = () => {
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 500 }}
                 >
-                  ✓
                 </motion.span>
               )}
             </div>
@@ -141,7 +140,7 @@ const UserInputPage = () => {
               프로필 사진
             </label>
             
-            <div className="flex flex-col items-center justify-center border-2 border-dashed border-[#F8E9CA]/30 rounded-xl p-4 bg-[#2A1B3D]/30 hover:bg-[#2A1B3D]/50 transition-colors duration-300 cursor-pointer relative overflow-hidden" onClick={() => document.getElementById('photoUpload').click()}>
+            <div className="flex flex-col items-center justify-center border-2 border-dashed border-[#F8E9CA]/30 rounded-xl p-4 bg-[#2A1B3D]/30 hover:bg-[#2A1B3D]/50 transition-colors duration-300 cursor-pointer relative" onClick={() => document.getElementById('photoUpload').click()}>
               <input
                 id="photoUpload"
                 type="file"
