@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import useUserStore from "../store/userStore";
 import usePhotoStore from "../store/photoStore";
 import photoBackground from "../api/photoBackground";
@@ -15,6 +15,8 @@ const UserInputPage = () => {
   const setUserData = useUserStore((state) => state.setUserData);
   const setPhotoData = usePhotoStore((state) => state.setPhotoData);
   const navigate = useNavigate();
+  
+  const MAX_JOB_LENGTH = 15; // 직업 최대 길이 상수 정의
 
   const handlePhotoChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -48,6 +50,14 @@ const UserInputPage = () => {
     // 직업 검증
     if (!job.trim()) {
       setError("직업을 입력해주세요");
+      setIsShaking(true);
+      setTimeout(() => setIsShaking(false), 600);
+      return;
+    }
+    
+    // 직업 길이 검증
+    if (job.length > MAX_JOB_LENGTH) {
+      setError(`직업은 최대 ${MAX_JOB_LENGTH}자까지만 입력 가능합니다`);
       setIsShaking(true);
       setTimeout(() => setIsShaking(false), 600);
       return;
@@ -120,7 +130,15 @@ const UserInputPage = () => {
                 placeholder="당신의 직업을 입력해주세요"
                 className={`custom-input ${isShaking ? 'shake' : ''}`}
                 value={job}
-                onChange={(e) => setJob(e.target.value)}
+                onChange={(e) => {
+                  setJob(e.target.value);
+                  if (e.target.value.length > MAX_JOB_LENGTH) {
+                    setError(`직업은 최대 ${MAX_JOB_LENGTH}자까지만 입력 가능합니다`);
+                  } else if (error && error.includes("직업")) {
+                    setError("");
+                  }
+                }}
+                maxLength={MAX_JOB_LENGTH + 5}
               />
               {job && (
                 <motion.span 
@@ -131,6 +149,25 @@ const UserInputPage = () => {
                 >
                 </motion.span>
               )}
+            </div>
+            {/* 최대 글자 수 표시 */}
+            <p className="text-xs text-[#F8E9CA]/70 mt-1 ml-1">
+              최대 {MAX_JOB_LENGTH}자
+            </p>
+            {/* 직업 입력 오류 메시지 영역 */}
+            <div className="h-6 mt-1">
+              <AnimatePresence>
+                {error && error.includes("직업") && (
+                  <motion.p 
+                    className="text-sm text-red-400"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    {error}
+                  </motion.p>
+                )}
+              </AnimatePresence>
             </div>
           </div>
           
