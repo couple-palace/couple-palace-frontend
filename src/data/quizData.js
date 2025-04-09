@@ -19,7 +19,7 @@ const quizData = [
       "같이 있어도 안 피곤한 게 중요함",
       "일단 재미있어야 함",
     ],
-    type: "MBTI",
+    type: "NICK",
   },
   {
     question_idx: 3,
@@ -118,7 +118,7 @@ const quizData = [
       "'결혼 체크리스트 100개 완성. 하루에 하나씩 해결하면 딱 맞음'",
       "'결혼식은 그냥 둘이서 여행 가서 셀프웨딩 하면 되는 거 아님? 식 귀찮아'",
     ],
-    type: "COND",
+    type: "MBTI",
   },
   {
     question_idx: 12,
