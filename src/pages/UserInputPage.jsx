@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import useUserStore from "../store/userStore";
 import usePhotoStore from "../store/photoStore";
+import useQuizStore from "../store/quizStore";
+import useProfileStore from "../store/profileStore";
 import photoBackground from "../api/photoBackground";
+import profileGenerate from "../api/profileGenerate";
 
 const UserInputPage = () => {
   const [job, setJob] = useState("");
@@ -14,6 +17,8 @@ const UserInputPage = () => {
   const [isShaking, setIsShaking] = useState(false);
   const setUserData = useUserStore((state) => state.setUserData);
   const setPhotoData = usePhotoStore((state) => state.setPhotoData);
+  const setProfileResult = useProfileStore((state) => state.setProfileResult);
+  const questionsList = useQuizStore((state) => state.questionsList);
   const navigate = useNavigate();
   
   const MAX_JOB_LENGTH = 15; // 직업 최대 길이 상수 정의
@@ -78,18 +83,27 @@ const UserInputPage = () => {
     
     try {
       // 직업은 userData에 저장
-      setUserData({ job});
+      setUserData({ job });
 
-      // 사진 배경 제거 API 호출 (이제 항상 실행됨)
-      console.log("배경 제거 API 호출"); // 디버깅용
+      // 사진 배경 제거 API 호출
+      console.log("배경 제거 API 호출"); 
       const response = await photoBackground.uploadPhoto(photo);
       setPhotoData(response.data);
+      
+      // 배경 제거 후 프로필 생성 API 호출
+      console.log("프로필 생성 API 호출");
+      if (questionsList && questionsList.length > 0) {
+        const profileResponse = await profileGenerate(questionsList, job);
+        if (profileResponse && profileResponse.data) {
+          setProfileResult(profileResponse.data);
+        }
+      }
       
       // API 호출이 완료된 후에만 페이지 이동
       navigate("/result");
     } catch (error) {
-      console.error("사진 업로드 실패:", error);
-      setError(`사진 업로드 중 오류: ${error.message}`);
+      console.error("API 호출 실패:", error);
+      setError(`처리 중 오류: ${error.message}`);
       setIsLoading(false);
     }
   };
