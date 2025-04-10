@@ -1,17 +1,28 @@
 import React, { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import QuizPage from "./pages/QuizPage";
-import UserInputPage from "./pages/UserInputPage";
-import ResultPage from "./pages/ResultPage";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Layout from "./components/Layout";
+import HomePage from "./pages/HomePage";
 import NameInputPage from "./pages/NameInputPage";
+import QuizPage from "./pages/QuizPage";
+import ResultPage from "./pages/ResultPage";
+import UserInputPage from "./pages/UserInputPage";
+import usePhotoData from "./store/photoStore";
 import useQuizStore from "./store/quizStore";
 import useUserStore from "./store/userStore";
-import usePhotoData from "./store/photoStore";
 
 const App = () => {
+  const location = useLocation();
+
   useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (location.pathname === "/quiz") {
+        event.preventDefault();
+        event.returnValue = ""; // 브라우저 기본 경고 메시지 표시
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    
     const unsubscribeQuiz = useQuizStore.subscribe((state) => {
       console.log("quizStore updated:", state);
     });
@@ -23,11 +34,12 @@ const App = () => {
     });
 
     return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload); // 이벤트 리스너 제거
       unsubscribeQuiz();
       unsubscribeUser();
       unsubscribePhoto();
     };
-  }, []);
+  }, [location]);
 
   return (
     <Layout>
