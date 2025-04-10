@@ -25,7 +25,7 @@ const ResultPage = () => {
   const profileApiRequestStarted = useRef(false);
   const cardGenerationStarted = useRef(false);
 
-  // 프로필 데이터 생성 - 엄격하게 한 번만 호출되도록 수정
+  // 프로필 데이터 생성 - 엄격하게 한 번만 호출되도록 z수정
   const generateProfileData = useCallback(async () => {
     // 이미 API 호출이 시작되었으면 중복 호출 방지
     if (profileApiRequestStarted.current) {
@@ -131,7 +131,7 @@ const ResultPage = () => {
     };
 
     generateCard();
-  }, [userData, profileResult, photoURL]);
+  }, );
 
   // 프로필 카드 저장
   const handleSaveCard = () => {
