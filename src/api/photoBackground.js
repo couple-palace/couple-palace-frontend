@@ -57,32 +57,52 @@ const uploadPhoto = async (photo) => {
         timeout: error.config?.timeout
       }
     });
-    
-    // Axios 에러 상세 정보
+
+    // 서버 응답 에러 처리
     if (error.response) {
-      console.error("서버 응답 에러:", { 
-        status: error.response.status,
-        headers: error.response.headers,
-        data: error.response.data instanceof Blob ? 
-          '바이너리 데이터 (blob)' : 
-          error.response.data
-      });
-    } else if (error.request) {
-      console.error("요청은 전송되었으나 응답이 없음:", {
+      const status = error.response.status;
+
+      // 클라이언트 오류 (4xx)
+      if (status >= 400 && status < 500) {
+        console.error("클라이언트 오류 발생:", {
+          status,
+          data: error.response.data,
+        });
+        throw new Error(
+          "사진 형식이 잘못되었습니다.\n입력 데이터를 확인한 후 다시 시도해주세요."
+        );
+      }
+
+      // 서버 오류 (5xx)
+      if (status >= 500) {
+        console.error("서버 내부 오류 발생:", {
+          status,
+          data: error.response.data,
+        });
+        throw new Error(
+          "사진이 제대로 업로드 되지 않았습니다.\n\n걱정마세요! 새로고침해도\n퀴즈 내용은 유지됩니다.\n페이지를 새로고침한 후\n다시 시도해주세요."
+        );
+      }
+    }
+
+    // 네트워크 오류 또는 요청 전송 실패
+    if (error.request) {
+      console.error("네트워크 오류 또는 요청 전송 실패:", {
         request: error.request.toString()
       });
-    } else {
-      console.error("요청 설정 중 에러 발생:", {
-        message: error.message,
-        stack: error.stack
-      });
+      throw new Error(
+        "네트워크 오류가 발생했습니다.\n\n인터넷 연결을 확인한 후\n다시 시도해주세요."
+      );
     }
-    
-    if (error.message.includes('timeout')) {
-      throw new Error("TIMEOUT: 서버 응답 시간이 너무 깁니다. 잠시 후 다시 시도해주세요.");
-    }
-    
-    throw error;
+
+    // 기타 예외 처리
+    console.error("예기치 못한 오류 발생:", {
+      message: error.message,
+      stack: error.stack
+    });
+    throw new Error(
+      "알 수 없는 오류가 발생했습니다.\n\n잠시 후 다시 시도해주세요."
+    );
   }
 };
 

@@ -108,7 +108,13 @@ const ResultPage = () => {
     >
       {error && (
         <div className="p-4 text-white rounded-lg mt-6 w-custom max-w-custom mx-auto">
-          {error}
+          {error.split("\n").map((line, index) => (
+            line === "" ? (
+              <br key={index} />
+            ) : (
+              <p key={index} className="mb-2">{line}</p>
+            )
+          ))}
           <button
             className="mt-3 px-4 py-2 bg-white text-white rounded-lg text-sm"
             onClick={() => navigate("/")}
