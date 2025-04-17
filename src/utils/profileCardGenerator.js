@@ -346,7 +346,7 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
   ctx.fillStyle = "#FFFFFF";
   
   // 닉네임 추가
-  textY = renderMarkdownText(ctx, `**${profileData.nickname}**`, textX, textY, MAX_TEXT_WIDTH, "50px HSBombaram");
+  textY = renderMarkdownText(ctx, `${profileData.nickname}`, textX, textY, MAX_TEXT_WIDTH, "50px HSBombaram");
   textY += 30;
   
   // 결혼가치관 제목
