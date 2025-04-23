@@ -168,7 +168,7 @@ const QuizPage = () => {
           <h2 className="text-xl font-medium text-[#F8E9CA] mb-4">퀴즈를 불러오는데 문제가 발생했습니다</h2>
           <p className="text-[#F8E9CA]/70 mb-6">잠시 후 다시 시도해주세요</p>
           <button 
-            className="px-6 py-3 bg-gradient-to-r from-[#F8E9CA] to-[#FFD700] text-[#2A2E3D] rounded-xl font-medium"
+            className="px-6 py-3 bg-gradient-to-r from-[#F8E9CA] to-[#FFD700] text-[#2A2E3D] rounded-xl font-medium webkit-backdrop-fix"
             onClick={() => navigate("/")}
           >
             처음으로 돌아가기

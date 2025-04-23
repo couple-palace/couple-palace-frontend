@@ -167,7 +167,7 @@ const ResultPage = () => {
             
             <button
               onClick={() => navigate("/")}
-              className="bg-gray-700/50 backdrop-blur-sm text-white py-2 px-4 rounded-lg text-sm hover:bg-gray-700/70 transition-colors nav-button"
+              className="bg-gray-700/50 webkit-backdrop-blur-sm text-white py-2 px-4 rounded-lg text-sm hover:bg-gray-700/70 transition-colors nav-button webkit-backdrop-fix"
             >
               처음으로 돌아가기
             </button>

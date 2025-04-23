@@ -224,7 +224,11 @@ const UserInputPage = () => {
                         setPhoto(null);
                         setPhotoPreview(null);
                       }}
-                      className="absolute top-0 right-0 transform -translate-y-1/3 translate-x-1/3 bg-[#2A1B3D]/80 hover:bg-[#2A1B3D] p-1 rounded-full shadow-md border border-[#F8E9CA]/30 photo-delete-button"
+                      className="absolute top-0 right-0 transform -translate-y-1/3 translate-x-1/3 
+                      bg-[#2A1B3D] bg-opacity-80 hover:bg-[#2A1B3D] 
+                      [-webkit-backdrop-filter:blur(8px)] backdrop-blur-sm 
+                      [transform:translateZ(0)] isolate
+                      p-1 rounded-full shadow-md border border-[#F8E9CA]/30 photo-delete-button"
                     >
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M18 6L6 18M6 6l12 12" />

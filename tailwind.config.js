@@ -19,5 +19,33 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function({ addUtilities }) {
+      const newUtilities = {
+        '.webkit-backdrop-blur-sm': {
+          '-webkit-backdrop-filter': 'blur(4px)',
+          'backdrop-filter': 'blur(4px)',
+          'transform': 'translateZ(0)',
+          'isolation': 'isolate'
+        },
+        '.webkit-backdrop-blur-md': {
+          '-webkit-backdrop-filter': 'blur(12px)',
+          'backdrop-filter': 'blur(12px)',
+          'transform': 'translateZ(0)',
+          'isolation': 'isolate'
+        },
+        '.webkit-backdrop-blur-lg': {
+          '-webkit-backdrop-filter': 'blur(16px)',
+          'backdrop-filter': 'blur(16px)',
+          'transform': 'translateZ(0)',
+          'isolation': 'isolate'
+        },
+        '.webkit-backdrop-fix': {
+          'transform': 'translateZ(0)',
+          'isolation': 'isolate',
+        },
+      }
+      addUtilities(newUtilities)
+    }
+  ],
 };
