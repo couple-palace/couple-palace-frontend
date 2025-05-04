@@ -171,6 +171,12 @@ const ResultPage = () => {
             >
               처음으로 돌아가기
             </button>
+            <button
+              onClick={() => window.open("https://www.buymeacoffee.com/clicelee", "_blank")}
+              className="bg-yellow-500 text-white py-2 px-4 rounded-lg text-sm hover:bg-yellow-600 transition-colors"
+            >
+              Buy Me a Coffee ☕
+            </button>
           </div>
         </motion.div>
       )}
