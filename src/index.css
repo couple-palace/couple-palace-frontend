@@ -273,6 +273,23 @@ input[type="password"] {
   user-select: none;
 }
 
+/* Safari backdrop-filter 버그 해결을 위한 스타일 */
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .safari-backdrop-fix {
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    transform: translateZ(0);
+    isolation: isolate;
+  }
+  
+  /* Safari에서 backdrop-filter가 작동하지 않을 때 폴백 스타일 */
+  @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .safari-backdrop-fix {
+      background-color: rgba(42, 27, 61, 0.95) !important;
+    }
+  }
+}
+
 /* 모바일용 버튼 스타일 강화 */
 button, 
 .quiz-option {
@@ -332,6 +349,10 @@ button,
   /* 사진 삭제 버튼 특화 스타일 - 모바일에서 배경색 유지 */
   .photo-delete-button {
     background-color: rgba(42, 27, 61, 0.8) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    backdrop-filter: blur(8px) !important;
+    transform: translateZ(0) !important;
+    isolation: isolate !important;
     -webkit-appearance: none !important;
     appearance: none !important;
     border: 1px solid rgba(248, 233, 202, 0.3) !important;
@@ -339,6 +360,16 @@ button,
   
   .photo-delete-button:active {
     background-color: rgb(42, 27, 61) !important;
+  }
+  
+  /* Safari 및 iOS에서 특별히 적용되는 스타일 - User Agent 감지 기반 */
+  @supports (-webkit-touch-callout: none) {
+    .photo-delete-button {
+      background-color: rgba(42, 27, 61, 0.8) !important;
+      border: 1px solid rgba(248, 233, 202, 0.3) !important;
+      transform: translateZ(0) !important;
+      isolation: isolate !important;
+    }
   }
   
   /* 네비게이션 버튼 특화 스타일 - 모바일에서 배경색 유지 */

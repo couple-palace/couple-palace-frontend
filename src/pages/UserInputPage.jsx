@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import useUserStore from "../store/userStore";
 import usePhotoStore from "../store/photoStore";
+import useQuizStore from "../store/quizStore";
+import useProfileStore from "../store/profileStore";
 import photoBackground from "../api/photoBackground";
+import profileGenerate from "../api/profileGenerate";
 
 const UserInputPage = () => {
   const [job, setJob] = useState("");
@@ -14,6 +17,8 @@ const UserInputPage = () => {
   const [isShaking, setIsShaking] = useState(false);
   const setUserData = useUserStore((state) => state.setUserData);
   const setPhotoData = usePhotoStore((state) => state.setPhotoData);
+  const setProfileResult = useProfileStore((state) => state.setProfileResult);
+  const questionsList = useQuizStore((state) => state.questionsList);
   const navigate = useNavigate();
   
   const MAX_JOB_LENGTH = 15; // 직업 최대 길이 상수 정의
@@ -78,18 +83,37 @@ const UserInputPage = () => {
     
     try {
       // 직업은 userData에 저장
-      setUserData({ job});
+      setUserData({ job });
 
-      // 사진 배경 제거 API 호출 (이제 항상 실행됨)
-      console.log("배경 제거 API 호출"); // 디버깅용
+      // 사진 배경 제거 API 호출
+      console.log("배경 제거 API 호출"); 
       const response = await photoBackground.uploadPhoto(photo);
       setPhotoData(response.data);
+      
+      // 배경 제거 후 프로필 생성 API 호출
+      console.log("프로필 생성 API 호출");
+      if (questionsList && questionsList.length > 0) {
+        const profileResponse = await profileGenerate(questionsList, job);
+        if (profileResponse && profileResponse.data) {
+          setProfileResult(profileResponse.data);
+        }
+      }
       
       // API 호출이 완료된 후에만 페이지 이동
       navigate("/result");
     } catch (error) {
-      console.error("사진 업로드 실패:", error);
-      setError(`사진 업로드 중 오류: ${error.message}`);
+      console.error("API 호출 실패:", error);
+      
+      // 사진 업로드 관련 에러일 경우 특별 메시지 표시
+      if (error.message.includes('PHOTO') || error.message.includes('Image') || 
+          error.message.includes('photo') || error.message.includes('TIMEOUT') ||
+          error.message.includes('사진') || error.message.includes('이미지')) {
+        setError(
+          "사진이 업로드 되지 않았습니다.\n\n걱정마세요! 새로고침해도\n퀴즈 내용은 유지됩니다.\n페이지를 새로고침한 후\n다시 시도해주세요."
+        );
+      } else {
+        setError(`처리 중 오류 ${error.message}`);
+      }
       setIsLoading(false);
     }
   };
@@ -200,7 +224,11 @@ const UserInputPage = () => {
                         setPhoto(null);
                         setPhotoPreview(null);
                       }}
-                      className="absolute top-0 right-0 transform -translate-y-1/3 translate-x-1/3 bg-[#2A1B3D]/80 hover:bg-[#2A1B3D] p-1 rounded-full shadow-md border border-[#F8E9CA]/30 photo-delete-button"
+                      className="absolute top-0 right-0 transform -translate-y-1/3 translate-x-1/3 
+                      bg-[#2A1B3D] bg-opacity-80 hover:bg-[#2A1B3D] 
+                      [-webkit-backdrop-filter:blur(8px)] backdrop-blur-sm 
+                      [transform:translateZ(0)] isolate
+                      p-1 rounded-full shadow-md border border-[#F8E9CA]/30 photo-delete-button"
                     >
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M18 6L6 18M6 6l12 12" />
@@ -223,11 +251,33 @@ const UserInputPage = () => {
           {/* 에러 메시지 */}
           {error && (
             <motion.div 
-              className="mt-4 p-3 bg-red-500/20 border border-red-500/40 rounded-lg text-red-300 text-sm"
+              className={`mt-4 p-3 ${error.includes("새로고침") 
+                ? "bg-blue-500/20 border border-blue-500/40 text-blue-200" 
+                : "bg-red-500/20 border border-red-500/40 text-red-300"} 
+                rounded-lg text-sm`}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              {error}
+              {error.includes("새로고침") ? (
+                <div className="flex items-start">
+                  <div className="mr-2 mt-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    {error.split("\n").map((line, index) => (
+                      line === "" ? (
+                        <br key={index} />
+                      ) : (
+                        <p key={index} className="mb-2">{line}</p>
+                      )
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                error
+              )}
             </motion.div>
           )}
         </motion.div>

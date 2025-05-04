@@ -1,18 +1,18 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
-import profileGenerate from "../api/profileGenerate";
 import usePhotoStore from "../store/photoStore";
 import useQuizStore from "../store/quizStore";
 import useUserStore from "../store/userStore";
+import useProfileStore from "../store/profileStore";
 import { useNavigate } from "react-router-dom";
 import generateProfileCard from "../utils/profileCardGenerator";
 
 const ResultPage = () => {
   const navigate = useNavigate();
-  const questionsList = useQuizStore((state) => state.questionsList);
+  // const questionsList = useQuizStore((state) => state.questionsList);
   const userData = useUserStore((state) => state.userData);
   const photoData = usePhotoStore((state) => state.photoData);
-  const [profileResult, setProfileResult] = useState(null);
+  const profileResult = useProfileStore((state) => state.profileResult);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [photoURL, setPhotoURL] = useState(null);
@@ -21,85 +21,17 @@ const ResultPage = () => {
   const [shareSuccess, setShareSuccess] = useState(false);
 
   // 중복 호출 방지를 위한 플래그
-  const isInitialMount = useRef(true);
-  const profileApiRequestStarted = useRef(false);
   const cardGenerationStarted = useRef(false);
 
-  // 프로필 데이터 생성 - 엄격하게 한 번만 호출되도록 수정
-  const generateProfileData = useCallback(async () => {
-    // 이미 API 호출이 시작되었으면 중복 호출 방지
-    if (profileApiRequestStarted.current) {
-      console.log("이미 프로필 API 요청이 시작되었습니다");
-      return;
-    }
-
-    if (!questionsList || questionsList.length < 1) {
-      setError("퀴즈 응답 데이터가 없습니다. 처음부터 다시 시작해주세요.");
-      setIsLoading(false);
-      return;
-    }
-
-    if (!userData || !userData.job) {
-      setError("직업 정보가 없습니다. 처음부터 다시 시작해주세요.");
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      profileApiRequestStarted.current = true;
-      console.log("프로필 생성 API 호출 시도", {
-        questionsList: questionsList,
-        job: userData.job,
-      });
-
-      // 로컬 스토리지에서 확인
-      const cacheKey = `profile-${userData.job}-${questionsList.length}`;
-      const cachedResult = sessionStorage.getItem(cacheKey);
-      if (cachedResult) {
-        console.log("캐시된 결과 사용");
-        setProfileResult(JSON.parse(cachedResult));
-        setIsLoading(false);
-        return;
-      }
-
-      const response = await profileGenerate(questionsList, userData.job);
-      console.log("프로필 생성 API 호출 성공", response);
-
-      // 응답 캐싱
-      if (response && response.data) {
-        sessionStorage.setItem(cacheKey, JSON.stringify(response.data));
-        setProfileResult(response.data);
-      } else {
-        throw new Error("API 응답에 데이터가 없습니다");
-      }
-    } catch (error) {
-      console.error("프로필 생성 오류:", error);
-      if (error.message === "EMPTY_QUIZ_DATA") {
-        setError("퀴즈 데이터가 비어있습니다. 처음부터 다시 시작해주세요.");
-      } else if (error.message === "EMPTY_JOB") {
-        setError("직업 정보가 없습니다. 처음부터 다시 시작해주세요.");
-      } else {
-        setError(`프로필 생성 중 오류가 발생했습니다: ${error.message}`);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }, [questionsList, userData]);
-
-  // 컴포넌트 마운트 시 한 번만 실행
+  // 결과 데이터 검증
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      generateProfileData();
+    if (!profileResult) {
+      setError("프로필 결과가 없습니다. 처음부터 다시 시작해주세요.");
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
     }
-
-    return () => {
-      profileApiRequestStarted.current = false;
-      cardGenerationStarted.current = false;
-      isInitialMount.current = true;
-    };
-  }, [generateProfileData]);
+  }, [profileResult]);
 
   // 사진 URL 생성
   useEffect(() => {
@@ -110,7 +42,7 @@ const ResultPage = () => {
     }
   }, [photoData]);
 
-  // 프로필 카드 이미지 생성 - 한 번만 실행되도록 수정
+  // 프로필 카드 이미지 생성
   useEffect(() => {
     const generateCard = async () => {
       if (userData && profileResult && photoURL && !cardGenerationStarted.current) {
@@ -123,7 +55,6 @@ const ResultPage = () => {
         } catch (error) {
           console.error("카드 생성 오류:", error);
           setError("프로필 카드 생성 중 오류가 발생했습니다.");
-          cardGenerationStarted.current = false;
         } finally {
           setIsGeneratingCard(false);
         }
@@ -177,7 +108,13 @@ const ResultPage = () => {
     >
       {error && (
         <div className="p-4 text-white rounded-lg mt-6 w-custom max-w-custom mx-auto">
-          {error}
+          {error.split("\n").map((line, index) => (
+            line === "" ? (
+              <br key={index} />
+            ) : (
+              <p key={index} className="mb-2">{line}</p>
+            )
+          ))}
           <button
             className="mt-3 px-4 py-2 bg-white text-white rounded-lg text-sm"
             onClick={() => navigate("/")}
@@ -230,7 +167,7 @@ const ResultPage = () => {
             
             <button
               onClick={() => navigate("/")}
-              className="bg-gray-700/50 backdrop-blur-sm text-white py-2 px-4 rounded-lg text-sm hover:bg-gray-700/70 transition-colors nav-button"
+              className="bg-gray-700/50 webkit-backdrop-blur-sm text-white py-2 px-4 rounded-lg text-sm hover:bg-gray-700/70 transition-colors nav-button webkit-backdrop-fix"
             >
               처음으로 돌아가기
             </button>

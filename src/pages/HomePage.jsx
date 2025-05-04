@@ -6,6 +6,10 @@ import profileSample from "@assets/profile_sample01.png"; // 이미지 import
 const HomePage = () => {
   const navigate = useNavigate();
 
+  const handleStart = () => {
+    navigate("/name-input");
+  };
+
   return (
     <div className="flex flex-col items-center min-h-screen border rounded-lg border-[#F8E9CA]/30 text-center p-6">
       {/* 타이틀 영역 */}
@@ -51,19 +55,13 @@ const HomePage = () => {
       </motion.div>
 
       {/* 퀴즈 시작 버튼 */}
-      <motion.button
-        onClick={() => navigate("/name-input")}
-        className="w-custom max-w-custom mx-auto bg-gradient-to-r from-[#F8E9CA] to-[#FFD700] text-[#1F2937] px-8 py-4 rounded-2xl text-lg font-bold shadow-lg shadow-[#F8E9CA]/20 hover:shadow-xl hover:shadow-[#F8E9CA]/30"
-        whileHover={{ scale: 1.05 }}
+      <motion.button 
+        onClick={handleStart}
+        className="w-full bg-gradient-to-r from-[#F8E9CA] to-[#FFD700] text-[#2A2E3D] py-4 text-xl font-bold rounded-xl webkit-backdrop-fix shadow-lg hover:shadow-xl"
+        whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.98 }}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
       >
-        <span className="flex items-center justify-center">
-          <i className="fas fa-sparkles mr-2"></i>
-          나의 프로필 만들러 가기
-        </span>
+        시작하기
       </motion.button>
       
       <motion.p 

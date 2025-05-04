@@ -235,12 +235,15 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
   
   // 프로필 이미지 크기 계산
   const profileAspectRatio = profileImg.width / profileImg.height;
-  let profileWidth = overlayWidth * 0.9;
-  let profileHeight = profileWidth / profileAspectRatio;
   
-  if (profileHeight > overlayHeight * 0.99) {
-    profileHeight = overlayHeight * 0.99;
-    profileWidth = profileHeight * profileAspectRatio;
+  // 항상 높이를 overlayHeight의 80%로 고정
+  let profileHeight = overlayHeight * 0.90;
+  let profileWidth = profileHeight * profileAspectRatio;
+  
+  // 만약 계산된 너비가 너무 크면(overlay 너비의 90%보다 크면) 너비를 제한하고 높이 재계산
+  if (profileWidth > overlayWidth * 0.9) {
+    profileWidth = overlayWidth * 0.9;
+    profileHeight = profileWidth / profileAspectRatio;
   }
   
   // divider 크기 계산
@@ -343,7 +346,7 @@ const generateProfileCard = async (userData, profileData, photoURL) => {
   ctx.fillStyle = "#FFFFFF";
   
   // 닉네임 추가
-  textY = renderMarkdownText(ctx, `**${profileData.nickname}**`, textX, textY, MAX_TEXT_WIDTH, "50px HSBombaram");
+  textY = renderMarkdownText(ctx, `${profileData.nickname}`, textX, textY, MAX_TEXT_WIDTH, "50px HSBombaram");
   textY += 30;
   
   // 결혼가치관 제목
